@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>5-Bit Text Converter</title>
+
+  <style>
+    body {
+      background: #111;
+      color: white;
+      font-family: Arial, sans-serif;
+      padding: 40px;
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    textarea {
+      width: 80%;
+      max-width: 800px;
+      height: 120px;
+      margin: 10px 0;
+      padding: 15px;
+      font-size: 20px;
+      border-radius: 10px;
+      border: none;
+      resize: vertical;
+    }
+
+    #output {
+      background: #222;
+      color: #00ff88;
+    }
+
+    button {
+      padding: 12px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background: #00aa66;
+      color: white;
+    }
+
+    button:hover {
+      background: #00cc77;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>5-Bit Font Converter</h1>
+
+  <textarea id="input" placeholder="Type normal text here..."></textarea>
+
+  <br>
+
+  <textarea id="output" readonly placeholder="Converted text will appear here..."></textarea>
+
+  <br><br>
+
+  <button onclick="copyOutput()">Copy Output</button>
+
+  <script>
+    const map = {
+      "a": "ᴀ",
+      "b": "ʙ",
+      "c": "ᴄ",
+      "d": "ᴅ",
+      "e": "ᴇ",
+      "f": "ꜰ",
+      "g": "ɢ",
+      "h": "ʜ",
+      "i": "ɪ",
+      "j": "ᴊ",
+      "k": "ᴋ",
+      "l": "ʟ",
+      "m": "ᴍ",
+      "n": "ɴ",
+      "o": "ᴏ",
+      "p": "ᴘ",
+      "q": "ǫ",
+      "r": "ʀ",
+      "s": "ѕ",
+      "t": "ᴛ",
+      "u": "ᴜ",
+      "v": "ᴠ",
+      "w": "ᴡ",
+      "x": "x",
+      "y": "ʏ",
+      "z": "ᴢ",
+
+      "1": "₁",
+      "2": "₂",
+      "3": "₃",
+      "4": "₄",
+      "5": "₅",
+      "6": "₆",
+      "7": "₇",
+      "8": "₈",
+      "9": "₉",
+      "0": "₀"
+    };
+
+    const input = document.getElementById("input");
+    const output = document.getElementById("output");
+
+    input.addEventListener("input", () => {
+      output.value = [...input.value]
+        .map(char => {
+          const lower = char.toLowerCase();
+          return map[lower] || char;
+        })
+        .join("");
+    });
+
+    async function copyOutput() {
+      await navigator.clipboard.writeText(output.value);
+      alert("Copied!");
+    }
+  </script>
+
+</body>
+</html>
