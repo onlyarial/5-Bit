@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Tag Tool</title>
+
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #0f1115;
+      color: white;
+      font-family: Inter, Arial, sans-serif;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 950px;
+      margin: auto;
+      background: #171a21;
+      border: 1px solid #2a2f3a;
+      border-radius: 22px;
+      padding: 32px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+    }
+
+    h1 { margin: 0; font-size: 38px; }
+
+    .subtitle {
+      color: #9ca3af;
+      margin-top: 8px;
+      margin-bottom: 28px;
+    }
+
+    .preview {
+      background: #0f1115;
+      border: 1px solid #2a2f3a;
+      border-radius: 18px;
+      padding: 30px;
+      text-align: center;
+      margin-bottom: 28px;
+      overflow-x: auto;
+    }
+
+    canvas {
+      image-rendering: pixelated;
+      max-width: 100%;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px;
+    }
+
+    .card {
+      background: #11141a;
+      border: 1px solid #262b36;
+      border-radius: 16px;
+      padding: 18px;
+    }
+
+    .card h2 {
+      margin: 0 0 14px;
+      font-size: 18px;
+    }
+
+    label {
+      display: block;
+      font-size: 14px;
+      color: #cbd5e1;
+      margin: 12px 0 6px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid #2a2f3a;
+      background: #0f1115;
+      color: white;
+      outline: none;
+    }
+
+    input:focus, select:focus {
+      border-color: #ef4444;
+      box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.15);
+    }
+
+    .buttons {
+      display: flex;
+      gap: 12px;
+      margin-top: 22px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      border: none;
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .red {
+      background: #ef4444;
+      color: white;
+    }
+
+    .dark {
+      background: #232833;
+      color: white;
+    }
+
+    .footer {
+      margin-top: 24px;
+      color: #6b7280;
+      text-align: center;
+      font-size: 13px;
+    }
+
+    @media (max-width: 750px) {
+      .grid { grid-template-columns: 1fr; }
+      h1 { font-size: 30px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Tag Tool</h1>
+    <div class="subtitle">
+      Create clean pixel-style tags for Minecraft ranks, crates, menus, and UI.
+    </div>
+
+    <div class="preview">
+      <canvas id="canvas"></canvas>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <h2>Text</h2>
+
+        <label>Tag Text</label>
+        <input id="tagText" value="OWNER" />
+
+        <label>Text Color</label>
+        <input id="textColor" type="color" value="#ffffff" />
+
+        <label>Text Size</label>
+        <input id="textSize" type="range" min="12" max="64" value="28" />
+      </div>
+
+      <div class="card">
+        <h2>Background</h2>
+
+        <label>Color 1</label>
+        <input id="bgColor1" type="color" value="#ef4444" />
+
+        <label>Color 2</label>
+        <input id="bgColor2" type="color" value="#7f1d1d" />
+
+        <label>Background Direction</label>
+        <select id="bgDirection">
+          <option value="horizontal">Horizontal</option>
+          <option value="vertical">Vertical</option>
+        </select>
+      </div>
+
+      <div class="card">
+        <h2>Padding</h2>
+
+        <label>Horizontal Padding</label>
+        <input id="hPadding" type="range" min="5" max="80" value="28" />
+
+        <label>Vertical Padding</label>
+        <input id="vPadding" type="range" min="5" max="50" value="14" />
+
+        <label>Rounded Corners</label>
+        <input id="radius" type="range" min="0" max="40" value="12" />
+      </div>
+
+      <div class="card">
+        <h2>Options</h2>
+
+        <label>Shadow</label>
+        <select id="shadow">
+          <option value="on">On</option>
+          <option value="off">Off</option>
+        </select>
+
+        <label>Pixel Scale</label>
+        <input id="scale" type="range" min="1" max="5" value="3" />
+
+        <label>Filename</label>
+        <input id="fileName" value="tag" />
+      </div>
+    </div>
+
+    <div class="buttons">
+      <button class="red" onclick="downloadPNG()">Save PNG</button>
+      <button class="dark" onclick="copyPNG()">Copy Image</button>
+      <button class="dark" onclick="resetTool()">Reset</button>
+    </div>
+
+    <div class="footer">
+      By onlyarial
+    </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+
+    const inputs = [
+      "tagText",
+      "textColor",
+      "textSize",
+      "bgColor1",
+      "bgColor2",
+      "bgDirection",
+      "hPadding",
+      "vPadding",
+      "radius",
+      "shadow",
+      "scale",
+      "fileName"
+    ];
+
+    inputs.forEach(id => {
+      document.getElementById(id).addEventListener("input", drawTag);
+    });
+
+    function roundRect(ctx, x, y, w, h, r) {
+      r = Math.min(r, w / 2, h / 2);
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.lineTo(x + w - r, y);
+      ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+      ctx.lineTo(x + w, y + h - r);
+      ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+      ctx.lineTo(x + r, y + h);
+      ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+      ctx.lineTo(x, y + r);
+      ctx.quadraticCurveTo(x, y, x + r, y);
+      ctx.closePath();
+    }
+
+    function drawTag() {
+      const text = document.getElementById("tagText").value || "TAG";
+      const textColor = document.getElementById("textColor").value;
+      const textSize = Number(document.getElementById("textSize").value);
+      const bg1 = document.getElementById("bgColor1").value;
+      const bg2 = document.getElementById("bgColor2").value;
+      const direction = document.getElementById("bgDirection").value;
+      const hPad = Number(document.getElementById("hPadding").value);
+      const vPad = Number(document.getElementById("vPadding").value);
+      const radius = Number(document.getElementById("radius").value);
+      const shadow = document.getElementById("shadow").value;
+      const scale = Number(document.getElementById("scale").value);
+
+      ctx.font = `700 ${textSize}px Arial`;
+      const textWidth = ctx.measureText(text).width;
+
+      const width = Math.ceil(textWidth + hPad * 2);
+      const height = Math.ceil(textSize + vPad * 2);
+
+      canvas.width = width * scale;
+      canvas.height = height * scale;
+      canvas.style.width = `${width * scale}px`;
+      canvas.style.height = `${height * scale}px`;
+
+      ctx.setTransform(scale, 0, 0, scale, 0, 0);
+      ctx.clearRect(0, 0, width, height);
+
+      if (shadow === "on") {
+        ctx.shadowColor = "rgba(0,0,0,0.45)";
+        ctx.shadowBlur = 8;
+        ctx.shadowOffsetX = 3;
+        ctx.shadowOffsetY = 3;
+      } else {
+        ctx.shadowColor = "transparent";
+      }
+
+      const gradient = direction === "horizontal"
+        ? ctx.createLinearGradient(0, 0, width, 0)
+        : ctx.createLinearGradient(0, 0, 0, height);
+
+      gradient.addColorStop(0, bg1);
+      gradient.addColorStop(1, bg2);
+
+      roundRect(ctx, 0, 0, width, height, radius);
+      ctx.fillStyle = gradient;
+      ctx.fill();
+
+      ctx.shadowColor = "transparent";
+
+      ctx.fillStyle = textColor;
+      ctx.font = `700 ${textSize}px Arial`;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(text, width / 2, height / 2 + 1);
+    }
+
+    function downloadPNG() {
+      const name = document.getElementById("fileName").value || "tag";
+      const link = document.createElement("a");
+      link.download = `${name}.png`;
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+    }
+
+    async function copyPNG() {
+      canvas.toBlob(async blob => {
+        try {
+          await navigator.clipboard.write([
+            new ClipboardItem({ "image/png": blob })
+          ]);
+          alert("Copied image!");
+        } catch {
+          alert("Your browser blocked image copy. Use Save PNG instead.");
+        }
+      });
+    }
+
+    function resetTool() {
+      document.getElementById("tagText").value = "OWNER";
+      document.getElementById("textColor").value = "#ffffff";
+      document.getElementById("textSize").value = 28;
+      document.getElementById("bgColor1").value = "#ef4444";
+      document.getElementById("bgColor2").value = "#7f1d1d";
+      document.getElementById("bgDirection").value = "horizontal";
+      document.getElementById("hPadding").value = 28;
+      document.getElementById("vPadding").value = 14;
+      document.getElementById("radius").value = 12;
+      document.getElementById("shadow").value = "on";
+      document.getElementById("scale").value = 3;
+      document.getElementById("fileName").value = "tag";
+      drawTag();
+    }
+
+    drawTag();
+  </script>
+
+</body>
+</html>
