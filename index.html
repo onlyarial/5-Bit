@@ -3,66 +3,230 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>5-Bit Text Converter</title>
+  <title>5-Bit Font Converter</title>
 
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
-      background: #111;
-      color: white;
-      font-family: Arial, sans-serif;
-      padding: 40px;
-      text-align: center;
+      margin: 0;
+      min-height: 100vh;
+      background: #0f1115;
+      color: #ffffff;
+      font-family: Inter, Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 20px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 850px;
+      background: #171a21;
+      border: 1px solid #2a2f3a;
+      border-radius: 22px;
+      padding: 35px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.4);
     }
 
     h1 {
-      margin-bottom: 20px;
+      margin: 0;
+      font-size: 38px;
+      font-weight: 700;
+      letter-spacing: -1px;
+    }
+
+    .subtitle {
+      margin-top: 8px;
+      color: #9ca3af;
+      font-size: 16px;
+    }
+
+    .about {
+      margin-top: 28px;
+      background: #11141a;
+      border: 1px solid #262b36;
+      border-radius: 16px;
+      padding: 20px;
+    }
+
+    .about h2 {
+      margin: 0 0 12px;
+      font-size: 18px;
+    }
+
+    .about p {
+      margin: 0 0 14px;
+      color: #c9d1d9;
+      line-height: 1.6;
+    }
+
+    .about ul {
+      margin: 0;
+      padding-left: 18px;
+      color: #c9d1d9;
+      line-height: 1.8;
+    }
+
+    .editor {
+      margin-top: 28px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 14px;
+      color: #cbd5e1;
+      font-weight: 600;
     }
 
     textarea {
-      width: 80%;
-      max-width: 800px;
-      height: 120px;
-      margin: 10px 0;
-      padding: 15px;
-      font-size: 20px;
-      border-radius: 10px;
-      border: none;
+      width: 100%;
+      min-height: 120px;
       resize: vertical;
+      border: 1px solid #2a2f3a;
+      border-radius: 16px;
+      background: #0f1115;
+      color: white;
+      padding: 18px;
+      font-size: 18px;
+      line-height: 1.5;
+      outline: none;
+      transition: 0.2s ease;
+    }
+
+    textarea:focus {
+      border-color: #4ade80;
+      box-shadow: 0 0 0 4px rgba(74, 222, 128, 0.15);
     }
 
     #output {
-      background: #222;
-      color: #00ff88;
+      color: #4ade80;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 12px;
+      margin-top: 18px;
     }
 
     button {
-      padding: 12px 20px;
-      font-size: 16px;
       border: none;
-      border-radius: 8px;
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 15px;
+      font-weight: 600;
       cursor: pointer;
-      background: #00aa66;
+      transition: 0.2s ease;
+    }
+
+    .copy-btn {
+      background: #4ade80;
+      color: #08110b;
+    }
+
+    .copy-btn:hover {
+      background: #67e89a;
+    }
+
+    .clear-btn {
+      background: #232833;
       color: white;
     }
 
-    button:hover {
-      background: #00cc77;
+    .clear-btn:hover {
+      background: #2f3644;
+    }
+
+    .footer {
+      margin-top: 24px;
+      color: #6b7280;
+      font-size: 13px;
+      text-align: center;
+    }
+
+    @media (max-width: 700px) {
+      .container {
+        padding: 24px;
+      }
+
+      h1 {
+        font-size: 30px;
+      }
+
+      textarea {
+        font-size: 16px;
+      }
+
+      .buttons {
+        flex-direction: column;
+      }
+
+      button {
+        width: 100%;
+      }
     }
   </style>
 </head>
 <body>
 
-  <h1>5-Bit Font Converter</h1>
+  <div class="container">
 
-  <textarea id="input" placeholder="Type normal text here..."></textarea>
+    <h1>5-Bit Font Converter</h1>
+    <div class="subtitle">
+      Convert normal text into the 5-Bit pixel-style font.
+    </div>
 
-  <br>
+    <div class="about">
+      <h2>About</h2>
 
-  <textarea id="output" readonly placeholder="Converted text will appear here..."></textarea>
+      <p>
+        A minimal 5x5 pixel font designed for UIs where space is limited.
+      </p>
 
-  <br><br>
+      <ul>
+        <li>Supports A-Z, 0-9, and basic symbols</li>
+        <li>Optimized for small UI elements</li>
+      </ul>
+    </div>
 
-  <button onclick="copyOutput()">Copy Output</button>
+    <div class="editor">
+
+      <label for="input">Input Text</label>
+      <textarea
+        id="input"
+        placeholder="Type your text here..."
+      ></textarea>
+
+      <br><br>
+
+      <label for="output">Converted Output</label>
+      <textarea
+        id="output"
+        readonly
+        placeholder="Converted text will appear here..."
+      ></textarea>
+
+      <div class="buttons">
+        <button class="copy-btn" onclick="copyOutput()">
+          Copy Output
+        </button>
+
+        <button class="clear-btn" onclick="clearAll()">
+          Clear
+        </button>
+      </div>
+
+    </div>
+
+    <div class="footer">
+      Self-hosted 5-Bit font generator
+    </div>
+
+  </div>
 
   <script>
     const map = {
@@ -118,8 +282,21 @@
     });
 
     async function copyOutput() {
+      if (!output.value) return;
+
       await navigator.clipboard.writeText(output.value);
-      alert("Copied!");
+
+      const btn = document.querySelector(".copy-btn");
+
+      btn.innerText = "Copied!";
+      setTimeout(() => {
+        btn.innerText = "Copy Output";
+      }, 1500);
+    }
+
+    function clearAll() {
+      input.value = "";
+      output.value = "";
     }
   </script>
 
