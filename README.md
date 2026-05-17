@@ -1,4 +1,4 @@
-[![OnlyArial](favicon.png)](https://guns.lol/onlyarial)
+[![OnlyArial](TOOLS.png)](https://guns.lol/onlyarial)
 
 # OnlyArial's Tools
 
