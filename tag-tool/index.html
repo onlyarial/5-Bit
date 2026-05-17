@@ -13,113 +13,162 @@
 
     body {
       margin: 0;
-      background: #0a0b0f;
+      min-height: 100vh;
+      background: #0f1115;
+      color: #ffffff;
+      font-family: Inter, Arial, sans-serif;
+      padding: 40px 20px;
+    }
+
+    .wrapper {
+      max-width: 1400px;
+      margin: auto;
+    }
+
+    .back-btn {
+      display: inline-block;
+      margin-bottom: 24px;
       color: white;
-      font-family: Arial, sans-serif;
-      padding: 28px;
+      background: #232833;
+      border: 1px solid #2a2f3a;
+      padding: 11px 16px;
+      border-radius: 12px;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 700;
+      transition: 0.2s ease;
+    }
+
+    .back-btn:hover {
+      background: #2f3644;
+      border-color: #ef4444;
     }
 
     h1 {
       margin: 0;
       font-size: 42px;
       font-weight: 800;
+      letter-spacing: -1px;
     }
 
     .subtitle {
-      color: #8b949e;
       margin-top: 10px;
-      margin-bottom: 35px;
+      margin-bottom: 40px;
+      color: #9ca3af;
       font-size: 15px;
+      line-height: 1.6;
     }
 
     .preview {
+      background: #171a21;
+      border: 1px solid #2a2f3a;
+      border-radius: 22px;
+      padding: 40px;
+      margin-bottom: 30px;
       display: flex;
       justify-content: center;
       align-items: center;
-      margin-bottom: 40px;
+      overflow-x: auto;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.4);
     }
 
     canvas {
-      background: transparent;
       image-rendering: pixelated;
       image-rendering: crisp-edges;
-      max-width: 100%;
     }
 
     .buttons {
       display: flex;
       justify-content: center;
       gap: 14px;
-      margin-bottom: 40px;
+      margin-bottom: 32px;
       flex-wrap: wrap;
     }
 
     button {
-      background: #2f333d;
       border: none;
-      color: white;
-      padding: 14px 22px;
-      border-radius: 10px;
+      border-radius: 12px;
+      padding: 14px 20px;
       font-size: 15px;
-      cursor: pointer;
       font-weight: 700;
-      transition: 0.15s;
+      cursor: pointer;
+      transition: 0.2s ease;
     }
 
-    button:hover {
-      background: #3b404d;
+    .primary-btn {
+      background: #ef4444;
+      color: white;
+    }
+
+    .primary-btn:hover {
+      background: #f87171;
+    }
+
+    .secondary-btn {
+      background: #232833;
+      color: white;
+    }
+
+    .secondary-btn:hover {
+      background: #2f3644;
     }
 
     .layout {
       display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 18px;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
     }
 
     .panel {
-      background: #050608;
-      border: 1px solid #111318;
-      padding: 18px;
-      border-radius: 14px;
+      background: #171a21;
+      border: 1px solid #2a2f3a;
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
     }
 
     .panel h2 {
       margin-top: 0;
       margin-bottom: 18px;
-      font-size: 22px;
+      font-size: 20px;
     }
 
     label {
       display: block;
-      margin-bottom: 8px;
       margin-top: 18px;
+      margin-bottom: 8px;
+      color: #cbd5e1;
       font-size: 14px;
-      color: #d0d7de;
+      font-weight: 600;
     }
 
     input,
     select {
       width: 100%;
-      padding: 12px;
-      border-radius: 8px;
-      border: 1px solid #2d333b;
-      background: #161b22;
+      border-radius: 12px;
+      border: 1px solid #2a2f3a;
+      background: #0f1115;
       color: white;
+      padding: 12px;
       font-size: 15px;
+      outline: none;
+      transition: 0.2s ease;
     }
 
-    input[type="range"] {
-      padding: 0;
+    input:focus,
+    select:focus {
+      border-color: #ef4444;
+      box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.15);
     }
 
     .footer {
-      margin-top: 35px;
+      margin-top: 34px;
       text-align: center;
-      color: #6e7681;
+      color: #6b7280;
       font-size: 13px;
     }
 
-    @media (max-width: 1000px) {
+    @media (max-width: 1100px) {
       .layout {
         grid-template-columns: 1fr;
       }
@@ -128,87 +177,94 @@
 </head>
 <body>
 
-  <h1>TAG TOOL</h1>
+  <div class="wrapper">
 
-  <div class="subtitle">
-    Create pixel art tags effortlessly with Tag Tool. No pixel art experience needed! Enjoy several styling options to make your tags unique and professional.
-  </div>
+    <a class="back-btn" href="../">← Back Home</a>
 
-  <div class="preview">
-    <canvas id="canvas"></canvas>
-  </div>
+    <h1>Tag Tool</h1>
 
-  <div class="buttons">
-    <button onclick="copyPNG()">Copy</button>
-    <button onclick="downloadPNG()">Save</button>
-  </div>
-
-  <div class="layout">
-
-    <div class="panel">
-      <h2>BACKGROUND</h2>
-
-      <label>H-Padding</label>
-      <input id="hPadding" type="range" min="0" max="20" value="4">
-
-      <label>V-Padding</label>
-      <input id="vPadding" type="range" min="0" max="20" value="2">
-
-      <label>Background Color 1</label>
-      <input id="bg1" type="color" value="#000000">
-
-      <label>Background Color 2</label>
-      <input id="bg2" type="color" value="#222222">
+    <div class="subtitle">
+      Create pixel art tags effortlessly with Tag Tool. No pixel art experience needed! Enjoy several styling options to make your tags unique and professional.
     </div>
 
-    <div class="panel">
-      <h2>TEXT</h2>
-
-      <label>Text Input</label>
-      <input id="text" value="Jeqo">
-
-      <label>Text Color 1</label>
-      <input id="text1" type="color" value="#ffffff">
-
-      <label>Text Color 2</label>
-      <input id="text2" type="color" value="#cccccc">
-
-      <label>Shadow Color</label>
-      <input id="shadowColor" type="color" value="#000000">
+    <div class="preview">
+      <canvas id="canvas"></canvas>
     </div>
 
-    <div class="panel">
-      <h2>OPTIONS</h2>
-
-      <label>Background Direction</label>
-      <select id="bgDirection">
-        <option value="horizontal">Horizontal</option>
-        <option value="vertical">Vertical</option>
-      </select>
-
-      <label>Text Direction</label>
-      <select id="textDirection">
-        <option value="horizontal">Horizontal</option>
-        <option value="vertical">Vertical</option>
-      </select>
-
-      <label>Rounded Corners</label>
-      <select id="rounded">
-        <option value="off">Off</option>
-        <option value="on">On</option>
-      </select>
-
-      <label>Shadow</label>
-      <select id="shadow">
-        <option value="on">On</option>
-        <option value="off">Off</option>
-      </select>
+    <div class="buttons">
+      <button class="primary-btn" onclick="copyPNG()">Copy</button>
+      <button class="primary-btn" onclick="downloadPNG()">Save</button>
+      <button class="secondary-btn" onclick="resetTool()">Reset</button>
     </div>
 
-  </div>
+    <div class="layout">
 
-  <div class="footer">
-    By onlyarial
+      <div class="panel">
+        <h2>BACKGROUND</h2>
+
+        <label>H-Padding</label>
+        <input id="hPadding" type="range" min="0" max="20" value="4">
+
+        <label>V-Padding</label>
+        <input id="vPadding" type="range" min="0" max="20" value="2">
+
+        <label>Background Color 1</label>
+        <input id="bg1" type="color" value="#000000">
+
+        <label>Background Color 2</label>
+        <input id="bg2" type="color" value="#2b2b2b">
+      </div>
+
+      <div class="panel">
+        <h2>TEXT</h2>
+
+        <label>Text Input</label>
+        <input id="text" value="JEQO">
+
+        <label>Text Color 1</label>
+        <input id="text1" type="color" value="#ffffff">
+
+        <label>Text Color 2</label>
+        <input id="text2" type="color" value="#cfcfcf">
+
+        <label>Shadow Color</label>
+        <input id="shadowColor" type="color" value="#000000">
+      </div>
+
+      <div class="panel">
+        <h2>OPTIONS</h2>
+
+        <label>Background Direction</label>
+        <select id="bgDirection">
+          <option value="horizontal">Horizontal</option>
+          <option value="vertical">Vertical</option>
+        </select>
+
+        <label>Text Direction</label>
+        <select id="textDirection">
+          <option value="horizontal">Horizontal</option>
+          <option value="vertical">Vertical</option>
+        </select>
+
+        <label>Rounded Corners</label>
+        <select id="rounded">
+          <option value="off">Off</option>
+          <option value="on">On</option>
+        </select>
+
+        <label>Shadow</label>
+        <select id="shadow">
+          <option value="on">On</option>
+          <option value="off">Off</option>
+        </select>
+      </div>
+
+    </div>
+
+    <div class="footer">
+      By onlyarial
+    </div>
+
   </div>
 
   <script>
@@ -245,12 +301,12 @@
       " ":["00000","00000","00000","00000","00000"]
     };
 
-    const controls = document.querySelectorAll("input, select");
-
-    controls.forEach(c => c.addEventListener("input", draw));
+    document.querySelectorAll("input, select")
+      .forEach(el => el.addEventListener("input", draw));
 
     function hexToRgb(hex) {
       const bigint = parseInt(hex.slice(1), 16);
+
       return {
         r: (bigint >> 16) & 255,
         g: (bigint >> 8) & 255,
@@ -258,11 +314,11 @@
       };
     }
 
-    function lerp(a,b,t) {
-      return a + (b-a)*t;
+    function lerp(a, b, t) {
+      return a + (b - a) * t;
     }
 
-    function gradientColor(c1,c2,t) {
+    function gradientColor(c1, c2, t) {
       const a = hexToRgb(c1);
       const b = hexToRgb(c2);
 
@@ -273,12 +329,13 @@
       )`;
     }
 
-    function drawPixel(x,y,size,color) {
+    function drawPixel(x, y, size, color) {
       ctx.fillStyle = color;
-      ctx.fillRect(x,y,size,size);
+      ctx.fillRect(x, y, size, size);
     }
 
     function draw() {
+
       const text = document.getElementById("text").value.toUpperCase();
 
       const bg1 = document.getElementById("bg1").value;
@@ -300,59 +357,78 @@
 
       const pixel = 12;
 
-      const width = (text.length * 6 - 1 + hPadding * 2) * pixel;
-      const height = (5 + vPadding * 2) * pixel;
+      const totalW = text.length * 6 - 1 + hPadding * 2;
+      const totalH = 5 + vPadding * 2;
 
-      canvas.width = width;
-      canvas.height = height;
+      canvas.width = totalW * pixel;
+      canvas.height = totalH * pixel;
 
-      ctx.clearRect(0,0,width,height);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      for(let y=0;y<5 + vPadding*2;y++) {
-        for(let x=0;x<text.length*6-1 + hPadding*2;x++) {
+      for(let y = 0; y < totalH; y++) {
+        for(let x = 0; x < totalW; x++) {
 
-          const t = bgDirection === "horizontal"
-            ? x / width * pixel
-            : y / height * pixel;
+          if (rounded) {
 
-          let color = gradientColor(bg1,bg2,t);
-
-          if(rounded) {
             const radius = 2;
 
-            if(
-              (x < radius && y < radius && (x-radius)**2 + (y-radius)**2 > radius**2) ||
-              (x > (text.length*6-1+hPadding*2)-radius-1 && y < radius &&
-              (x-((text.length*6-1+hPadding*2)-radius-1))**2 + (y-radius)**2 > radius**2)
-            ) continue;
+            const topLeft =
+              x < radius && y < radius &&
+              (x - radius) ** 2 + (y - radius) ** 2 > radius ** 2;
+
+            const topRight =
+              x >= totalW - radius && y < radius &&
+              (x - (totalW - radius - 1)) ** 2 +
+              (y - radius) ** 2 > radius ** 2;
+
+            const bottomLeft =
+              x < radius && y >= totalH - radius &&
+              (x - radius) ** 2 +
+              (y - (totalH - radius - 1)) ** 2 > radius ** 2;
+
+            const bottomRight =
+              x >= totalW - radius && y >= totalH - radius &&
+              (x - (totalW - radius - 1)) ** 2 +
+              (y - (totalH - radius - 1)) ** 2 > radius ** 2;
+
+            if (topLeft || topRight || bottomLeft || bottomRight) {
+              continue;
+            }
           }
 
-          drawPixel(x*pixel,y*pixel,pixel,color);
+          const t = bgDirection === "horizontal"
+            ? x / totalW
+            : y / totalH;
+
+          const color = gradientColor(bg1, bg2, t);
+
+          drawPixel(x * pixel, y * pixel, pixel, color);
         }
       }
 
-      for(let i=0;i<text.length;i++) {
+      for(let i = 0; i < text.length; i++) {
+
         const char = chars[text[i]] || chars[" "];
 
-        for(let y=0;y<5;y++) {
-          for(let x=0;x<5;x++) {
+        for(let y = 0; y < 5; y++) {
+          for(let x = 0; x < 5; x++) {
 
             if(char[y][x] === "1") {
 
-              const px = (x + i*6 + hPadding) * pixel;
+              const px = (x + i * 6 + hPadding) * pixel;
               const py = (y + vPadding) * pixel;
 
               const t = textDirection === "horizontal"
-                ? x/5
-                : y/5;
+                ? x / 5
+                : y / 5;
 
-              const color = gradientColor(text1,text2,t);
+              const color = gradientColor(text1, text2, t);
 
-              if(shadow) {
-                drawPixel(px+pixel,py+pixel,pixel,shadowColor);
+              if (shadow) {
+                drawPixel(px + pixel, py + pixel, pixel, shadowColor);
               }
 
-              drawPixel(px,py,pixel,color);
+              drawPixel(px, py, pixel, color);
             }
           }
         }
@@ -367,13 +443,39 @@
     }
 
     async function copyPNG() {
+
       canvas.toBlob(async blob => {
-        await navigator.clipboard.write([
-          new ClipboardItem({
-            "image/png": blob
-          })
-        ]);
+
+        try {
+
+          await navigator.clipboard.write([
+            new ClipboardItem({
+              "image/png": blob
+            })
+          ]);
+
+        } catch {
+          alert("Clipboard copy failed.");
+        }
       });
+    }
+
+    function resetTool() {
+
+      document.getElementById("text").value = "JEQO";
+      document.getElementById("bg1").value = "#000000";
+      document.getElementById("bg2").value = "#2b2b2b";
+      document.getElementById("text1").value = "#ffffff";
+      document.getElementById("text2").value = "#cfcfcf";
+      document.getElementById("shadowColor").value = "#000000";
+      document.getElementById("hPadding").value = 4;
+      document.getElementById("vPadding").value = 2;
+      document.getElementById("bgDirection").value = "horizontal";
+      document.getElementById("textDirection").value = "horizontal";
+      document.getElementById("rounded").value = "off";
+      document.getElementById("shadow").value = "on";
+
+      draw();
     }
 
     draw();
