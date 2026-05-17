@@ -26,7 +26,7 @@
       width: 100%;
       max-width: 850px;
       background: #171a21;
-      border: 1px solid #de4a4a;
+      border: 1px solid #2a2f3a;
       border-radius: 22px;
       padding: 35px;
       box-shadow: 0 10px 40px rgba(0,0,0,0.4);
@@ -87,7 +87,7 @@
       width: 100%;
       min-height: 120px;
       resize: vertical;
-      border: 1px solid #de4a4a;
+      border: 1px solid #2a2f3a;
       border-radius: 16px;
       background: #0f1115;
       color: white;
@@ -99,12 +99,12 @@
     }
 
     textarea:focus {
-      border-color: #4ade80;
-      box-shadow: 0 0 0 4px rgba(74, 222, 128, 0.15);
+      border-color: #ef4444;
+      box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.15);
     }
 
     #output {
-      color: #4ade80;
+      color: #ef4444;
     }
 
     .buttons {
@@ -124,12 +124,12 @@
     }
 
     .copy-btn {
-      background: #4ade80;
-      color: #08110b;
+      background: #ef4444;
+      color: white;
     }
 
     .copy-btn:hover {
-      background: #67e89a;
+      background: #f87171;
     }
 
     .clear-btn {
@@ -176,6 +176,7 @@
   <div class="container">
 
     <h1>5-Bit Font Converter</h1>
+
     <div class="subtitle">
       Convert normal text into the 5-Bit pixel-style font.
     </div>
@@ -196,6 +197,7 @@
     <div class="editor">
 
       <label for="input">Input Text</label>
+
       <textarea
         id="input"
         placeholder="Type your text here..."
@@ -204,6 +206,7 @@
       <br><br>
 
       <label for="output">Converted Output</label>
+
       <textarea
         id="output"
         readonly
@@ -211,6 +214,7 @@
       ></textarea>
 
       <div class="buttons">
+
         <button class="copy-btn" onclick="copyOutput()">
           Copy Output
         </button>
@@ -218,6 +222,7 @@
         <button class="clear-btn" onclick="clearAll()">
           Clear
         </button>
+
       </div>
 
     </div>
@@ -289,6 +294,7 @@
       const btn = document.querySelector(".copy-btn");
 
       btn.innerText = "Copied!";
+
       setTimeout(() => {
         btn.innerText = "Copy Output";
       }, 1500);
