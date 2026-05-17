@@ -3,170 +3,88 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>5-Bit Font Converter</title>
-
+  <title>onlyarial Tools</title>
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
     body {
       margin: 0;
       min-height: 100vh;
       background: #0f1115;
-      color: #ffffff;
-      font-family: Inter, Arial, sans-serif;
+      color: white;
+      font-family: Arial, sans-serif;
       display: flex;
-      justify-content: center;
       align-items: center;
-      padding: 40px 20px;
+      justify-content: center;
+      padding: 30px;
     }
 
     .container {
+      max-width: 800px;
       width: 100%;
-      max-width: 850px;
       background: #171a21;
       border: 1px solid #2a2f3a;
       border-radius: 22px;
       padding: 35px;
+      text-align: center;
       box-shadow: 0 10px 40px rgba(0,0,0,0.4);
     }
 
     h1 {
-      margin: 0;
+      margin-top: 0;
       font-size: 38px;
-      font-weight: 700;
-      letter-spacing: -1px;
     }
 
-    .subtitle {
-      margin-top: 8px;
+    p {
       color: #9ca3af;
       font-size: 16px;
     }
 
-    .about {
-      margin-top: 28px;
+    .tools {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px;
+      margin-top: 30px;
+    }
+
+    a {
+      text-decoration: none;
       background: #11141a;
-      border: 1px solid #262b36;
-      border-radius: 16px;
-      padding: 20px;
-    }
-
-    .about h2 {
-      margin: 0 0 12px;
-      font-size: 18px;
-    }
-
-    .about p {
-      margin: 0 0 14px;
-      color: #c9d1d9;
-      line-height: 1.6;
-    }
-
-    .about ul {
-      margin: 0;
-      padding-left: 18px;
-      color: #c9d1d9;
-      line-height: 1.8;
-    }
-
-    .editor {
-      margin-top: 28px;
-    }
-
-    label {
-      display: block;
-      margin-bottom: 10px;
-      font-size: 14px;
-      color: #cbd5e1;
-      font-weight: 600;
-    }
-
-    textarea {
-      width: 100%;
-      min-height: 120px;
-      resize: vertical;
-      border: 1px solid #2a2f3a;
-      border-radius: 16px;
-      background: #0f1115;
       color: white;
-      padding: 18px;
-      font-size: 18px;
-      line-height: 1.5;
-      outline: none;
-      transition: 0.2s ease;
+      border: 1px solid #2a2f3a;
+      border-radius: 18px;
+      padding: 28px;
+      transition: 0.2s;
     }
 
-    textarea:focus {
+    a:hover {
       border-color: #ef4444;
+      transform: translateY(-3px);
       box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.15);
     }
 
-    #output {
-      color: #ef4444;
+    .title {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 8px;
     }
 
-    .buttons {
-      display: flex;
-      gap: 12px;
-      margin-top: 18px;
-    }
-
-    button {
-      border: none;
-      border-radius: 12px;
-      padding: 14px 18px;
-      font-size: 15px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: 0.2s ease;
-    }
-
-    .copy-btn {
-      background: #ef4444;
-      color: white;
-    }
-
-    .copy-btn:hover {
-      background: #f87171;
-    }
-
-    .clear-btn {
-      background: #232833;
-      color: white;
-    }
-
-    .clear-btn:hover {
-      background: #2f3644;
+    .desc {
+      color: #9ca3af;
+      font-size: 14px;
     }
 
     .footer {
-      margin-top: 24px;
+      margin-top: 28px;
       color: #6b7280;
       font-size: 13px;
-      text-align: center;
     }
 
     @media (max-width: 700px) {
-      .container {
-        padding: 24px;
+      .tools {
+        grid-template-columns: 1fr;
       }
 
       h1 {
         font-size: 30px;
-      }
-
-      textarea {
-        font-size: 16px;
-      }
-
-      .buttons {
-        flex-direction: column;
-      }
-
-      button {
-        width: 100%;
       }
     }
   </style>
@@ -174,137 +92,23 @@
 <body>
 
   <div class="container">
+    <h1>onlyarial Tools</h1>
+    <p>Minecraft UI tools for fonts, tags, ranks, and icons.</p>
 
-    <h1>5-Bit Font Converter</h1>
+    <div class="tools">
+      <a href="5bit/">
+        <div class="title">5-Bit Font Converter</div>
+        <div class="desc">Convert normal text into small UI-style font characters.</div>
+      </a>
 
-    <div class="subtitle">
-      Convert normal text into the 5-Bit pixel-style font.
+      <a href="tag-tool/">
+        <div class="title">Tag Tool</div>
+        <div class="desc">Create clean PNG rank/tag icons for Minecraft UI.</div>
+      </a>
     </div>
 
-    <div class="about">
-      <h2>About</h2>
-
-      <p>
-        A minimal 5x5 pixel font designed for UIs where space is limited.
-      </p>
-
-      <ul>
-        <li>Supports A-Z, 0-9, and basic symbols</li>
-        <li>Optimized for small UI elements</li>
-      </ul>
-    </div>
-
-    <div class="editor">
-
-      <label for="input">Input Text</label>
-
-      <textarea
-        id="input"
-        placeholder="Type your text here..."
-      ></textarea>
-
-      <br><br>
-
-      <label for="output">Converted Output</label>
-
-      <textarea
-        id="output"
-        readonly
-        placeholder="ᴄᴏɴᴠᴇʀᴛᴇᴅ ᴛᴇxᴛ ᴡɪʟʟ ᴀᴘᴘᴇᴀʀ ʜᴇʀᴇ..."
-      ></textarea>
-
-      <div class="buttons">
-
-        <button class="copy-btn" onclick="copyOutput()">
-          Copy Output
-        </button>
-
-        <button class="clear-btn" onclick="clearAll()">
-          Clear
-        </button>
-
-      </div>
-
-    </div>
-
-    <div class="footer">
-      By onlyarial
-    </div>
-
+    <div class="footer">By onlyarial</div>
   </div>
-
-  <script>
-    const map = {
-      "a": "ᴀ",
-      "b": "ʙ",
-      "c": "ᴄ",
-      "d": "ᴅ",
-      "e": "ᴇ",
-      "f": "ꜰ",
-      "g": "ɢ",
-      "h": "ʜ",
-      "i": "ɪ",
-      "j": "ᴊ",
-      "k": "ᴋ",
-      "l": "ʟ",
-      "m": "ᴍ",
-      "n": "ɴ",
-      "o": "ᴏ",
-      "p": "ᴘ",
-      "q": "ǫ",
-      "r": "ʀ",
-      "s": "ѕ",
-      "t": "ᴛ",
-      "u": "ᴜ",
-      "v": "ᴠ",
-      "w": "ᴡ",
-      "x": "x",
-      "y": "ʏ",
-      "z": "ᴢ",
-
-      "1": "₁",
-      "2": "₂",
-      "3": "₃",
-      "4": "₄",
-      "5": "₅",
-      "6": "₆",
-      "7": "₇",
-      "8": "₈",
-      "9": "₉",
-      "0": "₀"
-    };
-
-    const input = document.getElementById("input");
-    const output = document.getElementById("output");
-
-    input.addEventListener("input", () => {
-      output.value = [...input.value]
-        .map(char => {
-          const lower = char.toLowerCase();
-          return map[lower] || char;
-        })
-        .join("");
-    });
-
-    async function copyOutput() {
-      if (!output.value) return;
-
-      await navigator.clipboard.writeText(output.value);
-
-      const btn = document.querySelector(".copy-btn");
-
-      btn.innerText = "Copied!";
-
-      setTimeout(() => {
-        btn.innerText = "Copy Output";
-      }, 1500);
-    }
-
-    function clearAll() {
-      input.value = "";
-      output.value = "";
-    }
-  </script>
 
 </body>
 </html>
