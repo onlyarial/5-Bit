@@ -526,27 +526,6 @@
       obfuscate: false
     };
 
-    const fiveBitMap = {
-      "a": "ᴀ", "b": "ʙ", "c": "ᴄ", "d": "ᴅ", "e": "ᴇ",
-      "f": "ꜰ", "g": "ɢ", "h": "ʜ", "i": "ɪ", "j": "ᴊ",
-      "k": "ᴋ", "l": "ʟ", "m": "ᴍ", "n": "ɴ", "o": "ᴏ",
-      "p": "ᴘ", "q": "ǫ", "r": "ʀ", "s": "ѕ", "t": "ᴛ",
-      "u": "ᴜ", "v": "ᴠ", "w": "ᴡ", "x": "x", "y": "ʏ", "z": "ᴢ",
-
-      "1": "₁", "2": "₂", "3": "₃", "4": "₄", "5": "₅",
-      "6": "₆", "7": "₇", "8": "₈", "9": "₉", "0": "₀",
-
-      "<": "‹",
-      ">": "›"
-    };
-
-    function toFiveBit(text) {
-      return [...text].map(char => {
-        const lower = char.toLowerCase();
-        return fiveBitMap[lower] || char;
-      }).join("");
-    }
-
     document.querySelectorAll(".style-btn").forEach(btn => {
       btn.addEventListener("click", () => {
         const style = btn.dataset.style;
@@ -897,7 +876,7 @@
           css += `text-decoration:${decorations.join(" ")};`;
         }
 
-        return `<span style="${css}">${escapeHtml(toFiveBit(item.char))}</span>`;
+        return `<span style="${css}">${escapeHtml(item.char)}</span>`;
       }).join("");
 
       output.value = formatText(items);
