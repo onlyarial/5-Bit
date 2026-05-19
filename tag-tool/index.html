@@ -8,10 +8,7 @@
   <link rel="shortcut icon" href="../icon-oa.png?v=1">
 
   <style>
-    * {
-      box-sizing: border-box;
-      image-rendering: pixelated;
-    }
+    * { box-sizing: border-box; image-rendering: pixelated; }
 
     body {
       margin: 0;
@@ -22,10 +19,7 @@
       padding: 40px 20px;
     }
 
-    .wrapper {
-      max-width: 1400px;
-      margin: auto;
-    }
+    .wrapper { max-width: 1400px; margin: auto; }
 
     .back-btn {
       display: inline-block;
@@ -70,13 +64,16 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      overflow-x: auto;
+      overflow: hidden;
       box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+      min-height: 190px;
     }
 
     canvas {
       image-rendering: pixelated;
       image-rendering: crisp-edges;
+      max-width: 100%;
+      height: auto;
     }
 
     .buttons {
@@ -97,23 +94,10 @@
       transition: 0.2s ease;
     }
 
-    .primary-btn {
-      background: #ef4444;
-      color: white;
-    }
-
-    .primary-btn:hover {
-      background: #f87171;
-    }
-
-    .secondary-btn {
-      background: #232833;
-      color: white;
-    }
-
-    .secondary-btn:hover {
-      background: #2f3644;
-    }
+    .primary-btn { background: #ef4444; color: white; }
+    .primary-btn:hover { background: #f87171; }
+    .secondary-btn { background: #232833; color: white; }
+    .secondary-btn:hover { background: #2f3644; }
 
     .layout {
       display: grid;
@@ -144,8 +128,7 @@
       font-weight: 600;
     }
 
-    input,
-    select {
+    input, select {
       width: 100%;
       border-radius: 12px;
       border: 1px solid #2a2f3a;
@@ -157,8 +140,7 @@
       transition: 0.2s ease;
     }
 
-    input:focus,
-    select:focus {
+    input:focus, select:focus {
       border-color: #ef4444;
       box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.15);
     }
@@ -171,16 +153,13 @@
     }
 
     @media (max-width: 1100px) {
-      .layout {
-        grid-template-columns: 1fr;
-      }
+      .layout { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
 
   <div class="wrapper">
-
     <a class="back-btn" href="../">← Back Home</a>
 
     <h1>Tag Tool</h1>
@@ -189,7 +168,7 @@
       Create pixel art tags effortlessly with Tag Tool. No pixel art experience needed! Enjoy several styling options to make your tags unique and professional.
     </div>
 
-    <div class="preview">
+    <div class="preview" id="previewBox">
       <canvas id="canvas"></canvas>
     </div>
 
@@ -221,13 +200,13 @@
         <h2>TEXT</h2>
 
         <label>Text Input</label>
-        <input id="text" value="JEQO">
+        <input id="text" value="ABCDEFGHIJKLMNOPQRSTUVWXYZ">
 
         <label>Text Color 1</label>
         <input id="text1" type="color" value="#ffffff">
 
         <label>Text Color 2</label>
-        <input id="text2" type="color" value="#cfcfcf">
+        <input id="text2" type="color" value="#ffffff">
 
         <label>Shadow Color</label>
         <input id="shadowColor" type="color" value="#000000">
@@ -256,22 +235,20 @@
 
         <label>Shadow</label>
         <select id="shadow">
-          <option value="on">On</option>
           <option value="off">Off</option>
+          <option value="on">On</option>
         </select>
       </div>
 
     </div>
 
-    <div class="footer">
-      By onlyarial
-    </div>
-
+    <div class="footer">By onlyarial</div>
   </div>
 
   <script>
     const canvas = document.getElementById("canvas");
     const ctx = canvas.getContext("2d");
+    const previewBox = document.getElementById("previewBox");
 
     const chars = {
       A:["01110","10001","11111","10001","10001"],
@@ -300,15 +277,40 @@
       X:["10001","01010","00100","01010","10001"],
       Y:["10001","01010","00100","00100","00100"],
       Z:["11111","00010","00100","01000","11111"],
+
+      "0":["01110","10011","10101","11001","01110"],
+      "1":["00100","01100","00100","00100","01110"],
+      "2":["01110","10001","00010","00100","11111"],
+      "3":["11110","00001","00110","00001","11110"],
+      "4":["10010","10010","11111","00010","00010"],
+      "5":["11111","10000","11110","00001","11110"],
+      "6":["01111","10000","11110","10001","01110"],
+      "7":["11111","00010","00100","01000","01000"],
+      "8":["01110","10001","01110","10001","01110"],
+      "9":["01110","10001","01111","00001","11110"],
+
+      "-":["00000","00000","11111","00000","00000"],
+      "_":["00000","00000","00000","00000","11111"],
+      ".":["00000","00000","00000","00000","00100"],
+      ",":["00000","00000","00000","00100","01000"],
+      ":":["00000","00100","00000","00100","00000"],
+      ";":["00000","00100","00000","00100","01000"],
+      "!":["00100","00100","00100","00000","00100"],
+      "?":["01110","10001","00010","00000","00010"],
+      "'":["00100","00100","00000","00000","00000"],
+      "\"":["01010","01010","00000","00000","00000"],
+      "/":["00001","00010","00100","01000","10000"],
+      "\\":["10000","01000","00100","00010","00001"],
       " ":["00000","00000","00000","00000","00000"]
     };
 
     document.querySelectorAll("input, select")
       .forEach(el => el.addEventListener("input", draw));
 
+    window.addEventListener("resize", draw);
+
     function hexToRgb(hex) {
       const bigint = parseInt(hex.slice(1), 16);
-
       return {
         r: (bigint >> 16) & 255,
         g: (bigint >> 8) & 255,
@@ -323,12 +325,7 @@
     function gradientColor(c1, c2, t) {
       const a = hexToRgb(c1);
       const b = hexToRgb(c2);
-
-      return `rgb(
-        ${lerp(a.r,b.r,t)},
-        ${lerp(a.g,b.g,t)},
-        ${lerp(a.b,b.b,t)}
-      )`;
+      return `rgb(${lerp(a.r,b.r,t)}, ${lerp(a.g,b.g,t)}, ${lerp(a.b,b.b,t)})`;
     }
 
     function drawPixel(x, y, size, color) {
@@ -336,16 +333,39 @@
       ctx.fillRect(x, y, size, size);
     }
 
-    function draw() {
+    function shouldSkipRoundedPixel(x, y, totalW, totalH) {
+      const radius = 2;
 
-      const text = document.getElementById("text").value.toUpperCase();
+      const topLeft =
+        x < radius && y < radius &&
+        (x - radius) ** 2 + (y - radius) ** 2 > radius ** 2;
+
+      const topRight =
+        x >= totalW - radius && y < radius &&
+        (x - (totalW - radius - 1)) ** 2 +
+        (y - radius) ** 2 > radius ** 2;
+
+      const bottomLeft =
+        x < radius && y >= totalH - radius &&
+        (x - radius) ** 2 +
+        (y - (totalH - radius - 1)) ** 2 > radius ** 2;
+
+      const bottomRight =
+        x >= totalW - radius && y >= totalH - radius &&
+        (x - (totalW - radius - 1)) ** 2 +
+        (y - (totalH - radius - 1)) ** 2 > radius ** 2;
+
+      return topLeft || topRight || bottomLeft || bottomRight;
+    }
+
+    function draw() {
+      const rawText = document.getElementById("text").value || "TAG";
+      const text = rawText.toUpperCase();
 
       const bg1 = document.getElementById("bg1").value;
       const bg2 = document.getElementById("bg2").value;
-
       const text1 = document.getElementById("text1").value;
       const text2 = document.getElementById("text2").value;
-
       const shadowColor = document.getElementById("shadowColor").value;
 
       const hPadding = parseInt(document.getElementById("hPadding").value);
@@ -358,104 +378,83 @@
       const shadow = document.getElementById("shadow").value === "on";
 
       const pixel = 12;
+      const letterWidth = 5;
+      const letterGap = 1;
+      const textPixelWidth = text.length * (letterWidth + letterGap) - letterGap;
 
-      const totalW = text.length * 6 - 1 + hPadding * 2;
-      const totalH = 5 + vPadding * 2;
+      const totalW = textPixelWidth + hPadding * 2 + (shadow ? 1 : 0);
+      const totalH = 5 + vPadding * 2 + (shadow ? 1 : 0);
 
       canvas.width = totalW * pixel;
       canvas.height = totalH * pixel;
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      for(let y = 0; y < totalH; y++) {
-        for(let x = 0; x < totalW; x++) {
-
-          if (rounded) {
-
-            const radius = 2;
-
-            const topLeft =
-              x < radius && y < radius &&
-              (x - radius) ** 2 + (y - radius) ** 2 > radius ** 2;
-
-            const topRight =
-              x >= totalW - radius && y < radius &&
-              (x - (totalW - radius - 1)) ** 2 +
-              (y - radius) ** 2 > radius ** 2;
-
-            const bottomLeft =
-              x < radius && y >= totalH - radius &&
-              (x - radius) ** 2 +
-              (y - (totalH - radius - 1)) ** 2 > radius ** 2;
-
-            const bottomRight =
-              x >= totalW - radius && y >= totalH - radius &&
-              (x - (totalW - radius - 1)) ** 2 +
-              (y - (totalH - radius - 1)) ** 2 > radius ** 2;
-
-            if (topLeft || topRight || bottomLeft || bottomRight) {
-              continue;
-            }
-          }
+      for (let y = 0; y < totalH; y++) {
+        for (let x = 0; x < totalW; x++) {
+          if (rounded && shouldSkipRoundedPixel(x, y, totalW, totalH)) continue;
 
           const t = bgDirection === "horizontal"
-            ? x / totalW
-            : y / totalH;
+            ? x / Math.max(1, totalW - 1)
+            : y / Math.max(1, totalH - 1);
 
-          const color = gradientColor(bg1, bg2, t);
-
-          drawPixel(x * pixel, y * pixel, pixel, color);
+          drawPixel(x * pixel, y * pixel, pixel, gradientColor(bg1, bg2, t));
         }
       }
 
-      for(let i = 0; i < text.length; i++) {
-
+      for (let i = 0; i < text.length; i++) {
         const char = chars[text[i]] || chars[" "];
 
-        for(let y = 0; y < 5; y++) {
-          for(let x = 0; x < 5; x++) {
-
-            if(char[y][x] === "1") {
-
-              const px = (x + i * 6 + hPadding) * pixel;
+        for (let y = 0; y < 5; y++) {
+          for (let x = 0; x < 5; x++) {
+            if (char[y][x] === "1") {
+              const px = (x + i * (letterWidth + letterGap) + hPadding) * pixel;
               const py = (y + vPadding) * pixel;
 
               const t = textDirection === "horizontal"
-                ? x / 5
-                : y / 5;
-
-              const color = gradientColor(text1, text2, t);
+                ? (i * (letterWidth + letterGap) + x) / Math.max(1, textPixelWidth - 1)
+                : y / 4;
 
               if (shadow) {
                 drawPixel(px + pixel, py + pixel, pixel, shadowColor);
               }
 
-              drawPixel(px, py, pixel, color);
+              drawPixel(px, py, pixel, gradientColor(text1, text2, t));
             }
           }
         }
+      }
+
+      fitPreview();
+    }
+
+    function fitPreview() {
+      const available = previewBox.clientWidth - 80;
+      const actualWidth = canvas.width;
+
+      if (actualWidth > available) {
+        const scale = Math.max(0.15, available / actualWidth);
+        canvas.style.width = `${actualWidth * scale}px`;
+        canvas.style.height = `${canvas.height * scale}px`;
+      } else {
+        canvas.style.width = `${actualWidth}px`;
+        canvas.style.height = `${canvas.height}px`;
       }
     }
 
     function downloadPNG() {
       const link = document.createElement("a");
       link.download = "tag.png";
-      link.href = canvas.toDataURL();
+      link.href = canvas.toDataURL("image/png");
       link.click();
     }
 
     async function copyPNG() {
-
       canvas.toBlob(async blob => {
-
         try {
-
           await navigator.clipboard.write([
-            new ClipboardItem({
-              "image/png": blob
-            })
+            new ClipboardItem({ "image/png": blob })
           ]);
-
         } catch {
           alert("Clipboard copy failed.");
         }
@@ -463,20 +462,18 @@
     }
 
     function resetTool() {
-
-      document.getElementById("text").value = "JEQO";
+      document.getElementById("text").value = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
       document.getElementById("bg1").value = "#000000";
       document.getElementById("bg2").value = "#2b2b2b";
       document.getElementById("text1").value = "#ffffff";
-      document.getElementById("text2").value = "#cfcfcf";
+      document.getElementById("text2").value = "#ffffff";
       document.getElementById("shadowColor").value = "#000000";
       document.getElementById("hPadding").value = 4;
       document.getElementById("vPadding").value = 2;
       document.getElementById("bgDirection").value = "horizontal";
       document.getElementById("textDirection").value = "horizontal";
       document.getElementById("rounded").value = "off";
-      document.getElementById("shadow").value = "on";
-
+      document.getElementById("shadow").value = "off";
       draw();
     }
 
