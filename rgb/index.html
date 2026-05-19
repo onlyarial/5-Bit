@@ -45,12 +45,18 @@
       border-color: #ef4444;
     }
 
-    .header {
+    .header,
+    .input-card,
+    .tool-card,
+    .info {
       background: #171a21;
       border: 1px solid #2a2f3a;
       border-radius: 22px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    }
+
+    .header {
       padding: 30px;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.35);
       margin-bottom: 24px;
     }
 
@@ -68,16 +74,8 @@
       line-height: 1.5;
     }
 
-    .input-card,
-    .tool-card {
-      background: #171a21;
-      border: 1px solid #2a2f3a;
-      border-radius: 22px;
-      padding: 24px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
-    }
-
     .input-card {
+      padding: 24px;
       margin-bottom: 24px;
     }
 
@@ -158,9 +156,13 @@
 
     .main-grid {
       display: grid;
-      grid-template-columns: 300px 1fr 300px;
+      grid-template-columns: 300px 1fr;
       gap: 20px;
       align-items: start;
+    }
+
+    .tool-card {
+      padding: 24px;
     }
 
     .section-title {
@@ -324,9 +326,6 @@
 
     .info {
       margin-top: 24px;
-      background: #171a21;
-      border: 1px solid #2a2f3a;
-      border-radius: 18px;
       padding: 18px;
       color: #cbd5e1;
       line-height: 1.5;
@@ -340,7 +339,7 @@
       font-size: 13px;
     }
 
-    @media (max-width: 1050px) {
+    @media (max-width: 950px) {
       .main-grid {
         grid-template-columns: 1fr;
       }
@@ -493,27 +492,6 @@
         </div>
       </div>
 
-      <div class="tool-card">
-        <div class="section-title">Presets</div>
-
-        <label>Saved Presets</label>
-        <select id="presetSelect">
-          <option value="">Saved Presets</option>
-        </select>
-
-        <div class="tool-row">
-          <button class="primary" onclick="savePreset()">Save Preset</button>
-        </div>
-
-        <label style="margin-top:16px;">Import JSON Preset</label>
-        <textarea id="importBox" placeholder="Paste preset JSON here"></textarea>
-
-        <div class="tool-row">
-          <button class="tool-btn" onclick="copyPreset()">Copy Preset</button>
-          <button class="tool-btn" onclick="importPreset()">Import</button>
-        </div>
-      </div>
-
     </div>
 
     <div class="info">
@@ -537,8 +515,6 @@
     const trimSpaces = document.getElementById("trimSpaces");
     const lowercaseHex = document.getElementById("lowercaseHex");
     const alwaysDisperse = document.getElementById("alwaysDisperse");
-    const presetSelect = document.getElementById("presetSelect");
-    const importBox = document.getElementById("importBox");
 
     let colors = ["#ef4444", "#ffffff"];
 
@@ -549,6 +525,27 @@
       strike: false,
       obfuscate: false
     };
+
+    const fiveBitMap = {
+      "a": "ᴀ", "b": "ʙ", "c": "ᴄ", "d": "ᴅ", "e": "ᴇ",
+      "f": "ꜰ", "g": "ɢ", "h": "ʜ", "i": "ɪ", "j": "ᴊ",
+      "k": "ᴋ", "l": "ʟ", "m": "ᴍ", "n": "ɴ", "o": "ᴏ",
+      "p": "ᴘ", "q": "ǫ", "r": "ʀ", "s": "ѕ", "t": "ᴛ",
+      "u": "ᴜ", "v": "ᴠ", "w": "ᴡ", "x": "x", "y": "ʏ", "z": "ᴢ",
+
+      "1": "₁", "2": "₂", "3": "₃", "4": "₄", "5": "₅",
+      "6": "₆", "7": "₇", "8": "₈", "9": "₉", "0": "₀",
+
+      "<": "‹",
+      ">": "›"
+    };
+
+    function toFiveBit(text) {
+      return [...text].map(char => {
+        const lower = char.toLowerCase();
+        return fiveBitMap[lower] || char;
+      }).join("");
+    }
 
     document.querySelectorAll(".style-btn").forEach(btn => {
       btn.addEventListener("click", () => {
@@ -576,8 +573,6 @@
     colorAmount.addEventListener("input", () => {
       setColorAmount(Number(colorAmount.value));
     });
-
-    presetSelect.addEventListener("change", loadPreset);
 
     function renderColors() {
       colorList.innerHTML = "";
@@ -621,7 +616,6 @@
 
     function removeColor(index) {
       if (colors.length <= 2) return;
-
       colors.splice(index, 1);
       renderColors();
       generate();
@@ -903,7 +897,7 @@
           css += `text-decoration:${decorations.join(" ")};`;
         }
 
-        return `<span style="${css}">${escapeHtml(item.char)}</span>`;
+        return `<span style="${css}">${escapeHtml(toFiveBit(item.char))}</span>`;
       }).join("");
 
       output.value = formatText(items);
@@ -955,90 +949,6 @@
       generate();
     }
 
-    function savePreset() {
-      const name = prompt("Preset name?");
-      if (!name) return;
-
-      const data = {
-        colors,
-        charsPerColor: charsPerColor.value,
-        format: format.value,
-        gradientType: gradientType.value,
-        activeStyles
-      };
-
-      localStorage.setItem("rgb-preset-" + name, JSON.stringify(data));
-      loadPresetList();
-    }
-
-    function loadPresetList() {
-      presetSelect.innerHTML = `<option value="">Saved Presets</option>`;
-
-      Object.keys(localStorage)
-        .filter(key => key.startsWith("rgb-preset-"))
-        .forEach(key => {
-          const name = key.replace("rgb-preset-", "");
-          const option = document.createElement("option");
-          option.value = key;
-          option.textContent = name;
-          presetSelect.appendChild(option);
-        });
-    }
-
-    function loadPreset() {
-      if (!presetSelect.value) return;
-
-      const data = JSON.parse(localStorage.getItem(presetSelect.value));
-
-      colors = data.colors || colors;
-      charsPerColor.value = data.charsPerColor || 1;
-      format.value = data.format || "ampHex";
-      gradientType.value = data.gradientType || "rgb";
-
-      Object.assign(activeStyles, data.activeStyles || {});
-
-      document.querySelectorAll(".style-btn").forEach(btn => {
-        btn.classList.toggle("active", activeStyles[btn.dataset.style]);
-      });
-
-      renderColors();
-      generate();
-    }
-
-    function copyPreset() {
-      const data = {
-        colors,
-        charsPerColor: charsPerColor.value,
-        format: format.value,
-        gradientType: gradientType.value,
-        activeStyles
-      };
-
-      navigator.clipboard.writeText(JSON.stringify(data));
-    }
-
-    function importPreset() {
-      try {
-        const data = JSON.parse(importBox.value);
-
-        colors = data.colors || colors;
-        charsPerColor.value = data.charsPerColor || 1;
-        format.value = data.format || "ampHex";
-        gradientType.value = data.gradientType || "rgb";
-
-        Object.assign(activeStyles, data.activeStyles || {});
-
-        document.querySelectorAll(".style-btn").forEach(btn => {
-          btn.classList.toggle("active", activeStyles[btn.dataset.style]);
-        });
-
-        renderColors();
-        generate();
-      } catch {
-        alert("Invalid preset JSON.");
-      }
-    }
-
     function resetTool() {
       inputText.value = "";
       colors = ["#ef4444", "#ffffff"];
@@ -1061,7 +971,6 @@
       generate();
     }
 
-    loadPresetList();
     renderColors();
     generate();
   </script>
