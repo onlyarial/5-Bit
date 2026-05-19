@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RGB Gradient Tool | onlyarial</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="../icon-oa.png?v=1">
+
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #0f1115;
+      color: white;
+      font-family: Inter, Arial, sans-serif;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: auto;
+      background: #171a21;
+      border: 1px solid #2a2f3a;
+      border-radius: 22px;
+      padding: 35px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+    }
+
+    .back-btn {
+      display: inline-block;
+      margin-bottom: 24px;
+      color: white;
+      background: #232833;
+      border: 1px solid #2a2f3a;
+      padding: 11px 16px;
+      border-radius: 12px;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .back-btn:hover {
+      background: #2f3644;
+      border-color: #ef4444;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 38px;
+    }
+
+    .subtitle {
+      color: #9ca3af;
+      margin-top: 8px;
+      margin-bottom: 28px;
+    }
+
+    label {
+      display: block;
+      margin-top: 18px;
+      margin-bottom: 8px;
+      color: #cbd5e1;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    textarea, input, select {
+      width: 100%;
+      border-radius: 14px;
+      border: 1px solid #2a2f3a;
+      background: #0f1115;
+      color: white;
+      padding: 14px;
+      font-size: 16px;
+      outline: none;
+    }
+
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    textarea:focus, input:focus, select:focus {
+      border-color: #ef4444;
+      box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.15);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px;
+    }
+
+    .preview {
+      margin-top: 24px;
+      padding: 22px;
+      background: #0f1115;
+      border: 1px solid #2a2f3a;
+      border-radius: 16px;
+      font-size: 28px;
+      font-weight: 700;
+      word-break: break-word;
+      min-height: 80px;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 12px;
+      margin-top: 18px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      border: none;
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .primary {
+      background: #ef4444;
+      color: white;
+    }
+
+    .primary:hover {
+      background: #f87171;
+    }
+
+    .secondary {
+      background: #232833;
+      color: white;
+    }
+
+    .secondary:hover {
+      background: #2f3644;
+    }
+
+    .footer {
+      margin-top: 28px;
+      text-align: center;
+      color: #6b7280;
+      font-size: 13px;
+    }
+
+    @media (max-width: 700px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      h1 {
+        font-size: 30px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <a class="back-btn" href="../">← Back Home</a>
+
+    <h1>RGB Gradient Tool</h1>
+    <div class="subtitle">
+      Create Minecraft RGB gradient text for MiniMessage, legacy hex, MOTD, and plain preview.
+    </div>
+
+    <label for="inputText">Text</label>
+    <textarea id="inputText" placeholder="Type your text here...">OnlyArial</textarea>
+
+    <div class="grid">
+      <div>
+        <label for="startColor">Start Color</label>
+        <input id="startColor" type="color" value="#ef4444">
+      </div>
+
+      <div>
+        <label for="endColor">End Color</label>
+        <input id="endColor" type="color" value="#ffffff">
+      </div>
+
+      <div>
+        <label for="format">Output Format</label>
+        <select id="format">
+          <option value="minimessage">MiniMessage</option>
+          <option value="legacy">Legacy Hex</option>
+          <option value="ampersand">Ampersand Hex</option>
+          <option value="motd">MOTD</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="bold">Style</label>
+        <select id="bold">
+          <option value="none">Normal</option>
+          <option value="bold">Bold</option>
+        </select>
+      </div>
+    </div>
+
+    <label>Preview</label>
+    <div id="preview" class="preview"></div>
+
+    <label for="output">Output</label>
+    <textarea id="output" readonly></textarea>
+
+    <div class="buttons">
+      <button class="primary" onclick="copyOutput()">Copy Output</button>
+      <button class="secondary" onclick="resetTool()">Reset</button>
+    </div>
+
+    <div class="footer">By onlyarial</div>
+  </div>
+
+  <script>
+    const inputText = document.getElementById("inputText");
+    const startColor = document.getElementById("startColor");
+    const endColor = document.getElementById("endColor");
+    const format = document.getElementById("format");
+    const bold = document.getElementById("bold");
+    const preview = document.getElementById("preview");
+    const output = document.getElementById("output");
+
+    [inputText, startColor, endColor, format, bold].forEach(el => {
+      el.addEventListener("input", generate);
+    });
+
+    function hexToRgb(hex) {
+      hex = hex.replace("#", "");
+      return {
+        r: parseInt(hex.substring(0, 2), 16),
+        g: parseInt(hex.substring(2, 4), 16),
+        b: parseInt(hex.substring(4, 6), 16)
+      };
+    }
+
+    function rgbToHex(r, g, b) {
+      return "#" + [r, g, b].map(x => {
+        const hex = Math.round(x).toString(16);
+        return hex.length === 1 ? "0" + hex : hex;
+      }).join("");
+    }
+
+    function legacyHex(hex, symbol) {
+      return symbol + "x" + hex.replace("#", "").split("").map(c => symbol + c).join("");
+    }
+
+    function motdHex(hex) {
+      return "\\u00A7x" + hex.replace("#", "").split("").map(c => "\\u00A7" + c).join("");
+    }
+
+    function getGradientColors(text, start, end) {
+      const chars = [...text];
+      const startRgb = hexToRgb(start);
+      const endRgb = hexToRgb(end);
+
+      return chars.map((char, i) => {
+        const t = chars.length <= 1 ? 0 : i / (chars.length - 1);
+
+        const r = startRgb.r + (endRgb.r - startRgb.r) * t;
+        const g = startRgb.g + (endRgb.g - startRgb.g) * t;
+        const b = startRgb.b + (endRgb.b - startRgb.b) * t;
+
+        return {
+          char,
+          color: rgbToHex(r, g, b)
+        };
+      });
+    }
+
+    function generate() {
+      const text = inputText.value;
+      const colors = getGradientColors(text, startColor.value, endColor.value);
+      const isBold = bold.value === "bold";
+
+      preview.innerHTML = colors.map(item => {
+        const safe = item.char
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;");
+
+        return `<span style="color:${item.color};${isBold ? "font-weight:900;" : ""}">${safe}</span>`;
+      }).join("");
+
+      let result = "";
+
+      if (format.value === "minimessage") {
+        result = colors.map(item => {
+          return `<${item.color}>${isBold ? "<bold>" : ""}${item.char}${isBold ? "</bold>" : ""}`;
+        }).join("");
+      }
+
+      if (format.value === "legacy") {
+        result = colors.map(item => {
+          return legacyHex(item.color, "§") + (isBold ? "§l" : "") + item.char;
+        }).join("");
+      }
+
+      if (format.value === "ampersand") {
+        result = colors.map(item => {
+          return legacyHex(item.color, "&") + (isBold ? "&l" : "") + item.char;
+        }).join("");
+      }
+
+      if (format.value === "motd") {
+        result = colors.map(item => {
+          return motdHex(item.color) + (isBold ? "\\u00A7l" : "") + item.char;
+        }).join("");
+      }
+
+      output.value = result;
+    }
+
+    async function copyOutput() {
+      if (!output.value) return;
+
+      await navigator.clipboard.writeText(output.value);
+
+      const btn = document.querySelector(".primary");
+      btn.innerText = "Copied!";
+
+      setTimeout(() => {
+        btn.innerText = "Copy Output";
+      }, 1500);
+    }
+
+    function resetTool() {
+      inputText.value = "OnlyArial";
+      startColor.value = "#ef4444";
+      endColor.value = "#ffffff";
+      format.value = "minimessage";
+      bold.value = "none";
+      generate();
+    }
+
+    generate();
+  </script>
+
+</body>
+</html>
