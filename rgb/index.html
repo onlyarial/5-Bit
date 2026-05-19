@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RGBirdflop | onlyarial</title>
+  <title>RGB Gradient Tool | onlyarial</title>
   <link rel="icon" type="image/png" sizes="32x32" href="../icon-oa.png?v=1">
+  <link rel="shortcut icon" href="../icon-oa.png?v=1">
 
   <style>
     * {
@@ -14,10 +15,10 @@
     body {
       margin: 0;
       min-height: 100vh;
-      background: #0f1724;
-      color: #f8fafc;
+      background: #0f1115;
+      color: #ffffff;
       font-family: Inter, Arial, sans-serif;
-      padding: 32px 18px;
+      padding: 40px 20px;
     }
 
     .page {
@@ -27,216 +28,240 @@
 
     .back-btn {
       display: inline-block;
-      margin-bottom: 22px;
+      margin-bottom: 24px;
       color: white;
-      background: #1e293b;
-      border: 1px solid #334155;
+      background: #232833;
+      border: 1px solid #2a2f3a;
       padding: 11px 16px;
       border-radius: 12px;
       text-decoration: none;
       font-size: 14px;
       font-weight: 700;
+      transition: 0.2s ease;
     }
 
     .back-btn:hover {
-      border-color: #3b82f6;
-      background: #253449;
+      background: #2f3644;
+      border-color: #ef4444;
     }
 
     .header {
-      border-bottom: 1px solid #243244;
-      padding-bottom: 22px;
-      margin-bottom: 26px;
+      background: #171a21;
+      border: 1px solid #2a2f3a;
+      border-radius: 22px;
+      padding: 30px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.35);
+      margin-bottom: 24px;
     }
 
     h1 {
       margin: 0;
-      font-size: 26px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
+      font-size: 38px;
+      font-weight: 800;
+      letter-spacing: -1px;
     }
 
     .subtitle {
-      margin-top: 10px;
-      color: #94a3b8;
-      font-size: 15px;
+      margin-top: 8px;
+      color: #9ca3af;
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
+    .input-card,
+    .tool-card {
+      background: #171a21;
+      border: 1px solid #2a2f3a;
+      border-radius: 22px;
+      padding: 24px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    }
+
+    .input-card {
+      margin-bottom: 24px;
     }
 
     .input-top {
       display: grid;
       grid-template-columns: 1fr auto;
       gap: 16px;
-      align-items: end;
-      margin-bottom: 18px;
-    }
-
-    .format-buttons {
-      display: flex;
-      gap: 8px;
-      background: #172235;
-      border: 1px solid #2b3b52;
-      border-radius: 12px;
-      padding: 6px;
-    }
-
-    .style-btn {
-      background: transparent;
-      color: #f8fafc;
-      border: none;
-      border-radius: 8px;
-      padding: 9px 12px;
-      font-size: 15px;
-      cursor: pointer;
-    }
-
-    .style-btn.active {
-      background: #2563eb;
+      align-items: stretch;
     }
 
     label {
       display: block;
       margin-bottom: 8px;
-      color: #e2e8f0;
+      color: #cbd5e1;
       font-weight: 700;
-      font-size: 15px;
+      font-size: 14px;
     }
 
     textarea,
     input,
     select {
       width: 100%;
-      border-radius: 10px;
-      border: 1px solid #2b3b52;
-      background: #1e293b;
+      border-radius: 12px;
+      border: 1px solid #2a2f3a;
+      background: #0f1115;
       color: white;
-      padding: 13px;
-      font-size: 16px;
+      padding: 13px 14px;
+      font-size: 15px;
       outline: none;
+      transition: 0.2s ease;
     }
 
     textarea {
       resize: vertical;
-      min-height: 46px;
+      min-height: 54px;
+      line-height: 1.45;
     }
 
     textarea:focus,
     input:focus,
     select:focus {
-      border-color: #3b82f6;
-      box-shadow: 0 0 0 4px rgba(59,130,246,0.15);
+      border-color: #ef4444;
+      box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.15);
+    }
+
+    .style-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      background: #0f1115;
+      border: 1px solid #2a2f3a;
+      border-radius: 14px;
+      padding: 8px;
+      height: fit-content;
+      align-self: end;
+    }
+
+    .style-btn {
+      min-width: 38px;
+      height: 38px;
+      background: #232833;
+      color: white;
+      border: 1px solid #2a2f3a;
+      border-radius: 10px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .style-btn:hover {
+      background: #2f3644;
+    }
+
+    .style-btn.active {
+      background: #ef4444;
+      border-color: #ef4444;
     }
 
     .main-grid {
       display: grid;
-      grid-template-columns: 290px 1fr 290px;
-      gap: 18px;
-      margin-top: 30px;
-    }
-
-    .section {
-      border-right: 1px solid #223047;
-      padding-right: 16px;
-    }
-
-    .section:last-child {
-      border-right: none;
-      padding-right: 0;
+      grid-template-columns: 300px 1fr 300px;
+      gap: 20px;
+      align-items: start;
     }
 
     .section-title {
       display: flex;
       align-items: center;
       gap: 9px;
-      font-size: 17px;
+      font-size: 18px;
       font-weight: 800;
       margin-bottom: 18px;
     }
 
     .step-row {
       display: grid;
-      grid-template-columns: 40px 1fr 40px;
-      gap: 7px;
+      grid-template-columns: 44px 1fr 44px;
+      gap: 8px;
       align-items: center;
-      margin-bottom: 14px;
+      margin-bottom: 16px;
+    }
+
+    .small-btn,
+    .tool-btn {
+      background: #232833;
+      color: white;
+      border: 1px solid #2a2f3a;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 800;
+      transition: 0.2s ease;
     }
 
     .small-btn {
-      background: #1e293b;
-      color: white;
-      border: 1px solid #2b3b52;
-      border-radius: 10px;
-      padding: 11px 0;
+      height: 44px;
       font-size: 22px;
-      cursor: pointer;
+      padding: 0;
     }
 
-    .small-btn:hover {
-      background: #253449;
+    .tool-btn {
+      padding: 11px 13px;
+      font-size: 13px;
+    }
+
+    .small-btn:hover,
+    .tool-btn:hover {
+      background: #2f3644;
+      border-color: #ef4444;
     }
 
     .color-list {
       display: grid;
       gap: 10px;
-      margin-top: 12px;
+      margin-top: 14px;
     }
 
     .color-item {
       display: grid;
-      grid-template-columns: 42px 1fr 36px;
+      grid-template-columns: 44px 1fr 38px;
       gap: 8px;
       align-items: center;
     }
 
     .color-item input[type="color"] {
-      padding: 4px;
-      height: 42px;
+      height: 44px;
+      padding: 5px;
       cursor: pointer;
     }
 
     .remove-color {
-      background: #1e293b;
-      border: 1px solid #2b3b52;
-      color: #f8fafc;
+      height: 44px;
+      background: #232833;
+      border: 1px solid #2a2f3a;
+      color: white;
       border-radius: 10px;
-      height: 42px;
       cursor: pointer;
-      font-weight: 800;
+      font-weight: 900;
+      transition: 0.2s ease;
+    }
+
+    .remove-color:hover {
+      background: #ef4444;
+      border-color: #ef4444;
     }
 
     .tool-row {
       display: flex;
-      gap: 7px;
+      gap: 8px;
       flex-wrap: wrap;
-      margin-top: 12px;
-    }
-
-    .tool-btn {
-      background: #1e293b;
-      color: white;
-      border: 1px solid #2b3b52;
-      border-radius: 9px;
-      padding: 10px 12px;
-      cursor: pointer;
-      font-weight: 700;
-    }
-
-    .tool-btn:hover {
-      background: #253449;
+      margin-top: 14px;
     }
 
     .output-area {
       min-height: 128px;
-      font-family: monospace;
+      font-family: Consolas, Monaco, monospace;
+      font-size: 14px;
     }
 
     .preview {
-      margin-top: 14px;
       padding: 16px;
       min-height: 66px;
-      background: #111827;
-      border: 1px solid #2b3b52;
-      border-radius: 12px;
+      background: #0f1115;
+      border: 1px solid #2a2f3a;
+      border-radius: 14px;
       font-size: 24px;
       font-weight: 800;
       word-break: break-word;
@@ -245,8 +270,8 @@
     .options-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-top: 14px;
+      gap: 14px;
+      margin-top: 18px;
     }
 
     .toggle {
@@ -254,61 +279,97 @@
       align-items: center;
       gap: 10px;
       margin-top: 14px;
-      color: #e2e8f0;
+      color: #cbd5e1;
       font-weight: 700;
+      font-size: 14px;
     }
 
     .toggle input {
-      width: 22px;
-      height: 22px;
+      width: 18px;
+      height: 18px;
+      accent-color: #ef4444;
     }
 
     .primary {
-      background: #2563eb;
+      background: #ef4444;
       color: white;
-      border: 1px solid #3b82f6;
-      border-radius: 10px;
-      padding: 12px 15px;
+      border: 1px solid #ef4444;
+      border-radius: 12px;
+      padding: 13px 16px;
       font-weight: 800;
       cursor: pointer;
+      transition: 0.2s ease;
     }
 
     .primary:hover {
-      background: #3b82f6;
-    }
-
-    .danger {
-      background: #ef4444;
+      background: #f87171;
       border-color: #f87171;
     }
 
+    .secondary {
+      background: #232833;
+      color: white;
+      border: 1px solid #2a2f3a;
+      border-radius: 12px;
+      padding: 13px 16px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .secondary:hover {
+      background: #2f3644;
+      border-color: #ef4444;
+    }
+
     .info {
-      margin-top: 34px;
-      color: #e2e8f0;
+      margin-top: 24px;
+      background: #171a21;
+      border: 1px solid #2a2f3a;
+      border-radius: 18px;
+      padding: 18px;
+      color: #cbd5e1;
       line-height: 1.5;
-      font-size: 15px;
+      font-size: 14px;
     }
 
     .footer {
       margin-top: 28px;
       text-align: center;
-      color: #64748b;
+      color: #6b7280;
       font-size: 13px;
     }
 
-    @media (max-width: 950px) {
+    @media (max-width: 1050px) {
       .main-grid {
         grid-template-columns: 1fr;
       }
 
-      .section {
-        border-right: none;
-        border-bottom: 1px solid #223047;
-        padding-right: 0;
-        padding-bottom: 22px;
+      .input-top {
+        grid-template-columns: 1fr;
       }
 
-      .input-top {
+      .style-row {
+        justify-content: center;
+      }
+    }
+
+    @media (max-width: 700px) {
+      body {
+        padding: 28px 14px;
+      }
+
+      h1 {
+        font-size: 30px;
+      }
+
+      .header,
+      .input-card,
+      .tool-card {
+        padding: 20px;
+      }
+
+      .options-grid {
         grid-template-columns: 1fr;
       }
     }
@@ -317,34 +378,37 @@
 <body>
 
   <div class="page">
+
     <a class="back-btn" href="../">← Back Home</a>
 
     <div class="header">
-      <h1>🎨 RGBirdflop</h1>
+      <h1>RGB Gradient Tool</h1>
       <div class="subtitle">
-        Hex gradient text generator for Minecraft formatting.
+        Create Minecraft RGB gradient text for chat, ranks, MOTDs, and plugins.
       </div>
     </div>
 
-    <div class="input-top">
-      <div>
-        <label for="inputText">›_ Input Text</label>
-        <textarea id="inputText" placeholder="Type here to generate a gradient!"></textarea>
-      </div>
+    <div class="input-card">
+      <div class="input-top">
+        <div>
+          <label for="inputText">Input Text</label>
+          <textarea id="inputText" placeholder="Type here to generate a gradient!"></textarea>
+        </div>
 
-      <div class="format-buttons">
-        <button class="style-btn" data-style="bold">B</button>
-        <button class="style-btn" data-style="italic"><i>I</i></button>
-        <button class="style-btn" data-style="underline"><u>U</u></button>
-        <button class="style-btn" data-style="strike"><s>S</s></button>
-        <button class="style-btn" data-style="obfuscate">🪄</button>
+        <div class="style-row">
+          <button class="style-btn" data-style="bold" title="Bold">B</button>
+          <button class="style-btn" data-style="italic" title="Italic"><i>I</i></button>
+          <button class="style-btn" data-style="underline" title="Underline"><u>U</u></button>
+          <button class="style-btn" data-style="strike" title="Strikethrough"><s>S</s></button>
+          <button class="style-btn" data-style="obfuscate" title="Obfuscate">&k</button>
+        </div>
       </div>
     </div>
 
     <div class="main-grid">
 
-      <div class="section">
-        <div class="section-title">🎨 Colors</div>
+      <div class="tool-card">
+        <div class="section-title">Colors</div>
 
         <label>Characters per color</label>
         <div class="step-row">
@@ -363,25 +427,25 @@
         <div id="colorList" class="color-list"></div>
 
         <div class="tool-row">
-          <button class="tool-btn" onclick="addColor()">＋ Add</button>
-          <button class="tool-btn" onclick="copyColors()">⧉ Copy</button>
-          <button class="tool-btn" onclick="swapColors()">↔ Swap</button>
-          <button class="tool-btn" onclick="shuffleColors()">⤨ Shuffle</button>
-          <button class="tool-btn" onclick="randomColors()">◔ Random</button>
-          <button class="tool-btn" onclick="reverseColors()">↔ Reverse</button>
+          <button class="tool-btn" onclick="addColor()">Add</button>
+          <button class="tool-btn" onclick="copyColors()">Copy</button>
+          <button class="tool-btn" onclick="swapColors()">Swap</button>
+          <button class="tool-btn" onclick="shuffleColors()">Shuffle</button>
+          <button class="tool-btn" onclick="randomColors()">Random</button>
+          <button class="tool-btn" onclick="reverseColors()">Reverse</button>
         </div>
       </div>
 
-      <div class="section">
-        <div class="section-title">📋 Output</div>
-        <div style="color:#94a3b8;margin-bottom:10px;">Copy-paste this for RGB text!</div>
+      <div class="tool-card">
+        <div class="section-title">Output</div>
+        <div style="color:#9ca3af;margin-bottom:10px;">Copy-paste this for RGB text.</div>
 
         <textarea id="output" class="output-area" readonly></textarea>
 
-        <label>Preview</label>
+        <label style="margin-top:16px;">Preview</label>
         <div id="preview" class="preview"></div>
 
-        <div class="section-title" style="margin-top:18px;">⚙ Options</div>
+        <div class="section-title" style="margin-top:22px;">Options</div>
 
         <div class="options-grid">
           <div>
@@ -405,7 +469,7 @@
           </div>
         </div>
 
-        <label>Prefix/Suffix</label>
+        <label style="margin-top:16px;">Prefix/Suffix</label>
         <input id="prefixSuffix" placeholder="/nick $t">
 
         <label class="toggle">
@@ -424,27 +488,28 @@
         </label>
 
         <div class="tool-row">
-          <button class="primary" onclick="copyOutput()">Copy</button>
-          <button class="primary danger" onclick="resetTool()">Reset</button>
+          <button class="primary" onclick="copyOutput()">Copy Output</button>
+          <button class="secondary" onclick="resetTool()">Reset</button>
         </div>
       </div>
 
-      <div class="section">
-        <div class="section-title">💾 Presets</div>
+      <div class="tool-card">
+        <div class="section-title">Presets</div>
 
+        <label>Saved Presets</label>
         <select id="presetSelect">
           <option value="">Saved Presets</option>
         </select>
 
         <div class="tool-row">
-          <button class="primary" onclick="savePreset()">💾 Save</button>
+          <button class="primary" onclick="savePreset()">Save Preset</button>
         </div>
 
-        <label>Import - Paste JSON preset</label>
-        <textarea id="importBox" placeholder="Import - Paste here"></textarea>
+        <label style="margin-top:16px;">Import JSON Preset</label>
+        <textarea id="importBox" placeholder="Paste preset JSON here"></textarea>
 
         <div class="tool-row">
-          <button class="tool-btn" onclick="copyPreset()">Copy</button>
+          <button class="tool-btn" onclick="copyPreset()">Copy Preset</button>
           <button class="tool-btn" onclick="importPreset()">Import</button>
         </div>
       </div>
@@ -452,10 +517,11 @@
     </div>
 
     <div class="info">
-      RGBirdflop is a browser-based Minecraft RGB gradient creator. This remake is self-hosted and made for onlyarial tools.
+      A self-hosted Minecraft RGB gradient generator for creating formatted text with multiple colors, styles, and export formats.
     </div>
 
     <div class="footer">By onlyarial</div>
+
   </div>
 
   <script>
@@ -474,7 +540,7 @@
     const presetSelect = document.getElementById("presetSelect");
     const importBox = document.getElementById("importBox");
 
-    let colors = ["#ff0000", "#ffffff"];
+    let colors = ["#ef4444", "#ffffff"];
 
     const activeStyles = {
       bold: false,
@@ -535,6 +601,7 @@
           let value = e.target.value;
 
           if (!value.startsWith("#")) value = "#" + value;
+
           if (/^#[0-9a-fA-F]{6}$/.test(value)) {
             colors[index] = value;
             renderColors();
@@ -554,6 +621,7 @@
 
     function removeColor(index) {
       if (colors.length <= 2) return;
+
       colors.splice(index, 1);
       renderColors();
       generate();
@@ -581,6 +649,7 @@
 
     function hexToRgb(hex) {
       hex = hex.replace("#", "");
+
       return {
         r: parseInt(hex.slice(0, 2), 16),
         g: parseInt(hex.slice(2, 4), 16),
@@ -598,22 +667,22 @@
     }
 
     function rgbToHsv(r, g, b) {
-      r /= 255; g /= 255; b /= 255;
+      r /= 255;
+      g /= 255;
+      b /= 255;
 
-      const max = Math.max(r,g,b), min = Math.min(r,g,b);
-      let h, s, v = max;
+      const max = Math.max(r, g, b);
+      const min = Math.min(r, g, b);
       const d = max - min;
 
-      s = max === 0 ? 0 : d / max;
+      let h = 0;
+      const s = max === 0 ? 0 : d / max;
+      const v = max;
 
-      if (max === min) h = 0;
-      else {
-        switch(max) {
-          case r: h = (g - b) / d + (g < b ? 6 : 0); break;
-          case g: h = (b - r) / d + 2; break;
-          case b: h = (r - g) / d + 4; break;
-        }
-
+      if (max !== min) {
+        if (max === r) h = (g - b) / d + (g < b ? 6 : 0);
+        if (max === g) h = (b - r) / d + 2;
+        if (max === b) h = (r - g) / d + 4;
         h /= 6;
       }
 
@@ -621,14 +690,15 @@
     }
 
     function hsvToRgb(h, s, v) {
-      let r, g, b;
       const i = Math.floor(h * 6);
       const f = h * 6 - i;
       const p = v * (1 - s);
       const q = v * (1 - f * s);
       const t = v * (1 - (1 - f) * s);
 
-      switch(i % 6) {
+      let r, g, b;
+
+      switch (i % 6) {
         case 0: r = v; g = t; b = p; break;
         case 1: r = q; g = v; b = p; break;
         case 2: r = p; g = v; b = t; break;
@@ -653,18 +723,20 @@
         const hsvB = rgbToHsv(rgbB.r, rgbB.g, rgbB.b);
 
         let dh = hsvB.h - hsvA.h;
+
         if (dh > 0.5) dh -= 1;
         if (dh < -0.5) dh += 1;
 
         let h = hsvA.h + dh * t;
+
         if (h < 0) h += 1;
         if (h > 1) h -= 1;
 
-        return rgbToHex(
-          hsvToRgb(h, hsvA.s + (hsvB.s - hsvA.s) * t, hsvA.v + (hsvB.v - hsvA.v) * t).r,
-          hsvToRgb(h, hsvA.s + (hsvB.s - hsvA.s) * t, hsvA.v + (hsvB.v - hsvA.v) * t).g,
-          hsvToRgb(h, hsvA.s + (hsvB.s - hsvA.s) * t, hsvA.v + (hsvB.v - hsvA.v) * t).b
-        );
+        const s = hsvA.s + (hsvB.s - hsvA.s) * t;
+        const v = hsvA.v + (hsvB.v - hsvA.v) * t;
+        const rgb = hsvToRgb(h, s, v);
+
+        return rgbToHex(rgb.r, rgb.g, rgb.b);
       }
 
       return rgbToHex(
@@ -684,7 +756,9 @@
         .filter(item => !(trimSpaces.checked && item.char === " "))
         .map(item => item.index);
 
-      if (colorableIndexes.length === 0) colorableIndexes = chars.map((_, i) => i);
+      if (colorableIndexes.length === 0) {
+        colorableIndexes = chars.map((_, i) => i);
+      }
 
       chars.forEach((char, index) => {
         if (trimSpaces.checked && char === " ") {
@@ -725,21 +799,25 @@
 
     function styleCodes(symbol) {
       let codes = "";
+
       if (activeStyles.bold) codes += symbol + "l";
       if (activeStyles.italic) codes += symbol + "o";
       if (activeStyles.underline) codes += symbol + "n";
       if (activeStyles.strike) codes += symbol + "m";
       if (activeStyles.obfuscate) codes += symbol + "k";
+
       return codes;
     }
 
     function miniStyles() {
       let codes = "";
+
       if (activeStyles.bold) codes += "<bold>";
       if (activeStyles.italic) codes += "<italic>";
       if (activeStyles.underline) codes += "<underlined>";
       if (activeStyles.strike) codes += "<strikethrough>";
       if (activeStyles.obfuscate) codes += "<obfuscated>";
+
       return codes;
     }
 
@@ -751,8 +829,6 @@
     }
 
     function formatText(items) {
-      let result = "";
-
       if (format.value === "json") {
         return JSON.stringify(items.map(item => ({
           text: item.char,
@@ -765,14 +841,28 @@
         })), null, 2);
       }
 
-      result = items.map(item => {
+      const result = items.map(item => {
         if (!item.color) return item.char;
 
-        if (format.value === "ampHex") return `&${item.color}${styleCodes("&")}${item.char}`;
-        if (format.value === "minimessage") return `<${item.color}>${miniStyles()}${item.char}`;
-        if (format.value === "section") return legacyHex(item.color, "§") + styleCodes("§") + item.char;
-        if (format.value === "ampersand") return legacyHex(item.color, "&") + styleCodes("&") + item.char;
-        if (format.value === "bracket") return `<${item.color}>${miniStyles()}${item.char}`;
+        if (format.value === "ampHex") {
+          return `&${item.color}${styleCodes("&")}${item.char}`;
+        }
+
+        if (format.value === "minimessage") {
+          return `<${item.color}>${miniStyles()}${item.char}`;
+        }
+
+        if (format.value === "section") {
+          return legacyHex(item.color, "§") + styleCodes("§") + item.char;
+        }
+
+        if (format.value === "ampersand") {
+          return legacyHex(item.color, "&") + styleCodes("&") + item.char;
+        }
+
+        if (format.value === "bracket") {
+          return `<${item.color}>${miniStyles()}${item.char}`;
+        }
 
         return item.char;
       }).join("");
@@ -799,15 +889,19 @@
 
       preview.innerHTML = items.map(item => {
         let css = "";
+
         if (item.color) css += `color:${item.color};`;
         if (activeStyles.bold) css += "font-weight:900;";
         if (activeStyles.italic) css += "font-style:italic;";
 
         const decorations = [];
+
         if (activeStyles.underline) decorations.push("underline");
         if (activeStyles.strike) decorations.push("line-through");
 
-        if (decorations.length) css += `text-decoration:${decorations.join(" ")};`;
+        if (decorations.length) {
+          css += `text-decoration:${decorations.join(" ")};`;
+        }
 
         return `<span style="${css}">${escapeHtml(item.char)}</span>`;
       }).join("");
@@ -817,6 +911,12 @@
 
     function copyOutput() {
       navigator.clipboard.writeText(output.value);
+
+      const btn = event.target;
+      const old = btn.innerText;
+
+      btn.innerText = "Copied!";
+      setTimeout(() => btn.innerText = old, 1200);
     }
 
     function copyColors() {
@@ -928,6 +1028,10 @@
 
         Object.assign(activeStyles, data.activeStyles || {});
 
+        document.querySelectorAll(".style-btn").forEach(btn => {
+          btn.classList.toggle("active", activeStyles[btn.dataset.style]);
+        });
+
         renderColors();
         generate();
       } catch {
@@ -937,7 +1041,7 @@
 
     function resetTool() {
       inputText.value = "";
-      colors = ["#ff0000", "#ffffff"];
+      colors = ["#ef4444", "#ffffff"];
       charsPerColor.value = 1;
       colorAmount.value = 2;
       format.value = "ampHex";
@@ -948,7 +1052,10 @@
       alwaysDisperse.checked = false;
 
       Object.keys(activeStyles).forEach(key => activeStyles[key] = false);
-      document.querySelectorAll(".style-btn").forEach(btn => btn.classList.remove("active"));
+
+      document.querySelectorAll(".style-btn").forEach(btn => {
+        btn.classList.remove("active");
+      });
 
       renderColors();
       generate();
