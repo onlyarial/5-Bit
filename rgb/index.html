@@ -41,15 +41,7 @@
       font-weight: 700;
     }
 
-    .back-btn:hover {
-      background: #2f3644;
-      border-color: #ef4444;
-    }
-
-    h1 {
-      margin: 0;
-      font-size: 38px;
-    }
+    h1 { margin: 0; font-size: 38px; }
 
     .subtitle {
       color: #9ca3af;
@@ -77,10 +69,7 @@
       outline: none;
     }
 
-    textarea {
-      min-height: 100px;
-      resize: vertical;
-    }
+    textarea { min-height: 100px; resize: vertical; }
 
     textarea:focus, input:focus, select:focus {
       border-color: #ef4444;
@@ -91,6 +80,35 @@
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 18px;
+    }
+
+    .mini-grid {
+      display: grid;
+      grid-template-columns: 44px 1fr 44px;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .icon-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+
+    .style-btn, .small-btn {
+      background: #232833;
+      color: white;
+      border: 1px solid #2a2f3a;
+      border-radius: 10px;
+      padding: 11px 14px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .style-btn.active {
+      background: #ef4444;
+      border-color: #ef4444;
     }
 
     .preview {
@@ -121,23 +139,8 @@
       cursor: pointer;
     }
 
-    .primary {
-      background: #ef4444;
-      color: white;
-    }
-
-    .primary:hover {
-      background: #f87171;
-    }
-
-    .secondary {
-      background: #232833;
-      color: white;
-    }
-
-    .secondary:hover {
-      background: #2f3644;
-    }
+    .primary { background: #ef4444; color: white; }
+    .secondary { background: #232833; color: white; }
 
     .footer {
       margin-top: 28px;
@@ -147,13 +150,8 @@
     }
 
     @media (max-width: 700px) {
-      .grid {
-        grid-template-columns: 1fr;
-      }
-
-      h1 {
-        font-size: 30px;
-      }
+      .grid { grid-template-columns: 1fr; }
+      h1 { font-size: 30px; }
     }
   </style>
 </head>
@@ -163,47 +161,73 @@
     <a class="back-btn" href="../">← Back Home</a>
 
     <h1>RGB Gradient Tool</h1>
-    <div class="subtitle">
-      Create Minecraft RGB gradient text for MiniMessage, legacy hex, MOTD, and plain preview.
-    </div>
+    <div class="subtitle">Create Minecraft RGB gradient text for chat, ranks, MOTDs, and plugins.</div>
 
-    <label for="inputText">Text</label>
-    <textarea id="inputText" placeholder="Type your text here...">OnlyArial</textarea>
+    <label>Text</label>
+    <textarea id="inputText">OnlyArial</textarea>
 
     <div class="grid">
       <div>
-        <label for="startColor">Start Color</label>
+        <label>Start Color</label>
         <input id="startColor" type="color" value="#ef4444">
       </div>
 
       <div>
-        <label for="endColor">End Color</label>
+        <label>End Color</label>
         <input id="endColor" type="color" value="#ffffff">
       </div>
 
       <div>
-        <label for="format">Output Format</label>
+        <label>Output Format</label>
         <select id="format">
           <option value="minimessage">MiniMessage</option>
-          <option value="legacy">Legacy Hex</option>
-          <option value="ampersand">Ampersand Hex</option>
-          <option value="motd">MOTD</option>
+          <option value="&#">&#rrggbb</option>
+          <option value="json">JSON</option>
+          <option value="section">§x§r§r§g§g§b§b</option>
+          <option value="ampersand">&x&r&r&g&g&b&b</option>
+          <option value="bracket">&lt;#rrggbb&gt;</option>
         </select>
       </div>
 
       <div>
-        <label for="bold">Style</label>
-        <select id="bold">
-          <option value="none">Normal</option>
-          <option value="bold">Bold</option>
-        </select>
+        <label>Characters Per Color</label>
+        <div class="mini-grid">
+          <button class="small-btn" onclick="changeValue('charsPerColor', -1)">−</button>
+          <input id="charsPerColor" type="number" min="1" value="1">
+          <button class="small-btn" onclick="changeValue('charsPerColor', 1)">+</button>
+        </div>
       </div>
+
+      <div>
+        <label>Color Amount</label>
+        <div class="mini-grid">
+          <button class="small-btn" onclick="changeValue('colorAmount', -1)">−</button>
+          <input id="colorAmount" type="number" min="0" value="0">
+          <button class="small-btn" onclick="changeValue('colorAmount', 1)">+</button>
+        </div>
+      </div>
+
+      <div>
+        <label>Formatting</label>
+        <div class="icon-row">
+          <button class="style-btn" data-style="bold">B</button>
+          <button class="style-btn" data-style="italic"><i>I</i></button>
+          <button class="style-btn" data-style="underline"><u>U</u></button>
+          <button class="style-btn" data-style="strike"><s>S</s></button>
+          <button class="style-btn" data-style="obfuscate">&k</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="icon-row">
+      <button class="small-btn" onclick="swapColors()">↔ Swap Colors</button>
+      <button class="small-btn" onclick="randomColors()">🎲 Random Colors</button>
     </div>
 
     <label>Preview</label>
     <div id="preview" class="preview"></div>
 
-    <label for="output">Output</label>
+    <label>Output</label>
     <textarea id="output" readonly></textarea>
 
     <div class="buttons">
@@ -219,11 +243,29 @@
     const startColor = document.getElementById("startColor");
     const endColor = document.getElementById("endColor");
     const format = document.getElementById("format");
-    const bold = document.getElementById("bold");
+    const charsPerColor = document.getElementById("charsPerColor");
+    const colorAmount = document.getElementById("colorAmount");
     const preview = document.getElementById("preview");
     const output = document.getElementById("output");
 
-    [inputText, startColor, endColor, format, bold].forEach(el => {
+    const activeStyles = {
+      bold: false,
+      italic: false,
+      underline: false,
+      strike: false,
+      obfuscate: false
+    };
+
+    document.querySelectorAll(".style-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const style = btn.dataset.style;
+        activeStyles[style] = !activeStyles[style];
+        btn.classList.toggle("active", activeStyles[style]);
+        generate();
+      });
+    });
+
+    [inputText, startColor, endColor, format, charsPerColor, colorAmount].forEach(el => {
       el.addEventListener("input", generate);
     });
 
@@ -238,8 +280,8 @@
 
     function rgbToHex(r, g, b) {
       return "#" + [r, g, b].map(x => {
-        const hex = Math.round(x).toString(16);
-        return hex.length === 1 ? "0" + hex : hex;
+        const h = Math.round(x).toString(16);
+        return h.length === 1 ? "0" + h : h;
       }).join("");
     }
 
@@ -247,83 +289,132 @@
       return symbol + "x" + hex.replace("#", "").split("").map(c => symbol + c).join("");
     }
 
-    function motdHex(hex) {
-      return "\\u00A7x" + hex.replace("#", "").split("").map(c => "\\u00A7" + c).join("");
+    function getStyleCodes(symbol) {
+      let codes = "";
+      if (activeStyles.bold) codes += symbol + "l";
+      if (activeStyles.italic) codes += symbol + "o";
+      if (activeStyles.underline) codes += symbol + "n";
+      if (activeStyles.strike) codes += symbol + "m";
+      if (activeStyles.obfuscate) codes += symbol + "k";
+      return codes;
     }
 
-    function getGradientColors(text, start, end) {
+    function getMiniStyleOpen() {
+      let codes = "";
+      if (activeStyles.bold) codes += "<bold>";
+      if (activeStyles.italic) codes += "<italic>";
+      if (activeStyles.underline) codes += "<underlined>";
+      if (activeStyles.strike) codes += "<strikethrough>";
+      if (activeStyles.obfuscate) codes += "<obfuscated>";
+      return codes;
+    }
+
+    function getGradientColors(text) {
       const chars = [...text];
-      const startRgb = hexToRgb(start);
-      const endRgb = hexToRgb(end);
+      const start = hexToRgb(startColor.value);
+      const end = hexToRgb(endColor.value);
+
+      const perColor = Math.max(1, Number(charsPerColor.value));
+      const forcedAmount = Math.max(0, Number(colorAmount.value));
+      const steps = forcedAmount > 0 ? forcedAmount : Math.ceil(chars.length / perColor);
 
       return chars.map((char, i) => {
-        const t = chars.length <= 1 ? 0 : i / (chars.length - 1);
-
-        const r = startRgb.r + (endRgb.r - startRgb.r) * t;
-        const g = startRgb.g + (endRgb.g - startRgb.g) * t;
-        const b = startRgb.b + (endRgb.b - startRgb.b) * t;
+        const group = Math.floor(i / perColor);
+        const t = steps <= 1 ? 0 : Math.min(group, steps - 1) / (steps - 1);
 
         return {
           char,
-          color: rgbToHex(r, g, b)
+          color: rgbToHex(
+            start.r + (end.r - start.r) * t,
+            start.g + (end.g - start.g) * t,
+            start.b + (end.b - start.b) * t
+          )
         };
       });
     }
 
+    function escapeHtml(char) {
+      return char
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+    }
+
     function generate() {
       const text = inputText.value;
-      const colors = getGradientColors(text, startColor.value, endColor.value);
-      const isBold = bold.value === "bold";
+      const colors = getGradientColors(text);
 
       preview.innerHTML = colors.map(item => {
-        const safe = item.char
-          .replace(/&/g, "&amp;")
-          .replace(/</g, "&lt;")
-          .replace(/>/g, "&gt;");
-
-        return `<span style="color:${item.color};${isBold ? "font-weight:900;" : ""}">${safe}</span>`;
+        let css = `color:${item.color};`;
+        if (activeStyles.bold) css += "font-weight:900;";
+        if (activeStyles.italic) css += "font-style:italic;";
+        if (activeStyles.underline) css += "text-decoration:underline;";
+        if (activeStyles.strike) css += "text-decoration:line-through;";
+        return `<span style="${css}">${escapeHtml(item.char)}</span>`;
       }).join("");
 
       let result = "";
 
       if (format.value === "minimessage") {
-        result = colors.map(item => {
-          return `<${item.color}>${isBold ? "<bold>" : ""}${item.char}${isBold ? "</bold>" : ""}`;
-        }).join("");
+        result = colors.map(item => `<${item.color}>${getMiniStyleOpen()}${item.char}`).join("");
       }
 
-      if (format.value === "legacy") {
-        result = colors.map(item => {
-          return legacyHex(item.color, "§") + (isBold ? "§l" : "") + item.char;
-        }).join("");
+      if (format.value === "&#") {
+        result = colors.map(item => `&${item.color}${getStyleCodes("&")}${item.char}`).join("");
+      }
+
+      if (format.value === "json") {
+        result = JSON.stringify(colors.map(item => ({
+          text: item.char,
+          color: item.color,
+          bold: activeStyles.bold || undefined,
+          italic: activeStyles.italic || undefined,
+          underlined: activeStyles.underline || undefined,
+          strikethrough: activeStyles.strike || undefined,
+          obfuscated: activeStyles.obfuscate || undefined
+        })), null, 2);
+      }
+
+      if (format.value === "section") {
+        result = colors.map(item => legacyHex(item.color, "§") + getStyleCodes("§") + item.char).join("");
       }
 
       if (format.value === "ampersand") {
-        result = colors.map(item => {
-          return legacyHex(item.color, "&") + (isBold ? "&l" : "") + item.char;
-        }).join("");
+        result = colors.map(item => legacyHex(item.color, "&") + getStyleCodes("&") + item.char).join("");
       }
 
-      if (format.value === "motd") {
-        result = colors.map(item => {
-          return motdHex(item.color) + (isBold ? "\\u00A7l" : "") + item.char;
-        }).join("");
+      if (format.value === "bracket") {
+        result = colors.map(item => `<${item.color}>${getMiniStyleOpen()}${item.char}`).join("");
       }
 
       output.value = result;
     }
 
-    async function copyOutput() {
-      if (!output.value) return;
+    function changeValue(id, amount) {
+      const el = document.getElementById(id);
+      el.value = Math.max(Number(el.min || 0), Number(el.value) + amount);
+      generate();
+    }
 
-      await navigator.clipboard.writeText(output.value);
+    function copyOutput() {
+      navigator.clipboard.writeText(output.value);
+    }
 
-      const btn = document.querySelector(".primary");
-      btn.innerText = "Copied!";
+    function swapColors() {
+      const old = startColor.value;
+      startColor.value = endColor.value;
+      endColor.value = old;
+      generate();
+    }
 
-      setTimeout(() => {
-        btn.innerText = "Copy Output";
-      }, 1500);
+    function randomHex() {
+      return "#" + Math.floor(Math.random() * 16777215).toString(16).padStart(6, "0");
+    }
+
+    function randomColors() {
+      startColor.value = randomHex();
+      endColor.value = randomHex();
+      generate();
     }
 
     function resetTool() {
@@ -331,7 +422,12 @@
       startColor.value = "#ef4444";
       endColor.value = "#ffffff";
       format.value = "minimessage";
-      bold.value = "none";
+      charsPerColor.value = 1;
+      colorAmount.value = 0;
+
+      Object.keys(activeStyles).forEach(k => activeStyles[k] = false);
+      document.querySelectorAll(".style-btn").forEach(btn => btn.classList.remove("active"));
+
       generate();
     }
 
